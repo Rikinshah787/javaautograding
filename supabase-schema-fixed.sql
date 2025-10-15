@@ -1,8 +1,14 @@
--- Supabase Database Schema for Java Grader System
+-- Supabase Database Schema for Java Grader System (Fixed Version)
 -- Run this in your Supabase SQL editor
 
+-- Drop existing tables if they exist (for clean setup)
+DROP TABLE IF EXISTS student_assignments CASCADE;
+DROP TABLE IF EXISTS submissions CASCADE;
+DROP TABLE IF EXISTS students CASCADE;
+DROP TABLE IF EXISTS assignments CASCADE;
+
 -- Create assignments table
-CREATE TABLE IF NOT EXISTS assignments (
+CREATE TABLE assignments (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     title TEXT NOT NULL,
     description TEXT,
@@ -15,8 +21,21 @@ CREATE TABLE IF NOT EXISTS assignments (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Create students table
+CREATE TABLE students (
+    email TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    submissions JSONB NOT NULL DEFAULT '[]',
+    best_score INTEGER NOT NULL DEFAULT 0,
+    first_submission TIMESTAMPTZ,
+    last_submission TIMESTAMPTZ,
+    submission_count INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Create submissions table
-CREATE TABLE IF NOT EXISTS submissions (
+CREATE TABLE submissions (
     id TEXT PRIMARY KEY,
     assignment_id TEXT REFERENCES assignments(id) ON DELETE CASCADE,
     student_name TEXT NOT NULL,
@@ -39,24 +58,8 @@ CREATE TABLE IF NOT EXISTS submissions (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Create students table
-CREATE TABLE IF NOT EXISTS students (
-    email TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    submissions JSONB NOT NULL DEFAULT '[]',
-    best_score INTEGER NOT NULL DEFAULT 0,
-    first_submission TIMESTAMPTZ,
-    last_submission TIMESTAMPTZ,
-    submission_count INTEGER NOT NULL DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Add last_submission column if it doesn't exist
-ALTER TABLE students ADD COLUMN IF NOT EXISTS last_submission TIMESTAMPTZ;
-
 -- Create student_assignments table (tracks student progress per assignment)
-CREATE TABLE IF NOT EXISTS student_assignments (
+CREATE TABLE student_assignments (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     student_email TEXT REFERENCES students(email) ON DELETE CASCADE,
     assignment_id TEXT REFERENCES assignments(id) ON DELETE CASCADE,
@@ -72,16 +75,16 @@ CREATE TABLE IF NOT EXISTS student_assignments (
 );
 
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_submissions_student_email ON submissions(student_email);
-CREATE INDEX IF NOT EXISTS idx_submissions_timestamp ON submissions(timestamp DESC);
-CREATE INDEX IF NOT EXISTS idx_submissions_assignment_id ON submissions(assignment_id);
-CREATE INDEX IF NOT EXISTS idx_submissions_is_late ON submissions(is_late);
-CREATE INDEX IF NOT EXISTS idx_students_last_submission ON students(last_submission DESC);
-CREATE INDEX IF NOT EXISTS idx_assignments_due_date ON assignments(due_date);
-CREATE INDEX IF NOT EXISTS idx_assignments_is_active ON assignments(is_active);
-CREATE INDEX IF NOT EXISTS idx_student_assignments_student_email ON student_assignments(student_email);
-CREATE INDEX IF NOT EXISTS idx_student_assignments_assignment_id ON student_assignments(assignment_id);
-CREATE INDEX IF NOT EXISTS idx_student_assignments_is_completed ON student_assignments(is_completed);
+CREATE INDEX idx_submissions_student_email ON submissions(student_email);
+CREATE INDEX idx_submissions_timestamp ON submissions(timestamp DESC);
+CREATE INDEX idx_submissions_assignment_id ON submissions(assignment_id);
+CREATE INDEX idx_submissions_is_late ON submissions(is_late);
+CREATE INDEX idx_students_last_submission ON students(last_submission DESC);
+CREATE INDEX idx_assignments_due_date ON assignments(due_date);
+CREATE INDEX idx_assignments_is_active ON assignments(is_active);
+CREATE INDEX idx_student_assignments_student_email ON student_assignments(student_email);
+CREATE INDEX idx_student_assignments_assignment_id ON student_assignments(assignment_id);
+CREATE INDEX idx_student_assignments_is_completed ON student_assignments(is_completed);
 
 -- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -129,7 +132,7 @@ CREATE POLICY "Allow all operations on students" ON students
 CREATE POLICY "Allow all operations on student_assignments" ON student_assignments
     FOR ALL USING (true);
 
--- Insert some sample data (optional)
+-- Insert sample data
 INSERT INTO assignments (id, title, description, due_date, created_by, max_attempts, late_penalty_percentage)
 VALUES 
     ('default-assignment', 'Stock Portfolio Application', 'Java programming assignment for stock portfolio management', NOW() + INTERVAL '7 days', 'admin', 3, 10.0)

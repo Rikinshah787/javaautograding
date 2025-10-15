@@ -86,15 +86,41 @@ class SupabaseDatabaseService {
     }
 
     // Add a new submission
-    async addSubmission(submission) {
+    async addSubmission(submission, assignmentId = 'default-assignment') {
         try {
+            // Get assignment details to check due date
+            const { data: assignment, error: assignmentError } = await this.supabase
+                .from('assignments')
+                .select('*')
+                .eq('id', assignmentId)
+                .single();
+            
+            if (assignmentError) {
+                console.error('❌ Error fetching assignment:', assignmentError);
+                return null;
+            }
+            
+            // Check if submission is late
+            const submissionTime = new Date(submission.timestamp);
+            const dueDate = new Date(assignment.due_date);
+            const isLate = submissionTime > dueDate;
+            
+            // Calculate late penalty
+            let latePenalty = 0;
+            if (isLate) {
+                latePenalty = (submission.grades.total * assignment.late_penalty_percentage) / 100;
+            }
+            
             const { data, error } = await this.supabase
                 .from('submissions')
                 .insert([{
                     id: submission.id,
+                    assignment_id: assignmentId,
                     student_name: submission.studentName,
                     student_email: submission.studentEmail,
                     timestamp: submission.timestamp,
+                    is_late: isLate,
+                    late_penalty_applied: latePenalty,
                     grades: submission.grades,
                     compilation_success: submission.compilationSuccess,
                     execution_success: submission.executionSuccess,
@@ -113,7 +139,7 @@ class SupabaseDatabaseService {
             
             // Update cache
             this.cache.submissions.unshift(data[0]);
-            console.log(`✅ Submission saved to Supabase: ${submission.id}`);
+            console.log(`✅ Submission saved to Supabase: ${submission.id} (Late: ${isLate}, Penalty: ${latePenalty})`);
             
             return data[0];
             
