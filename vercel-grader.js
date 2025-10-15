@@ -11,6 +11,7 @@ const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const JavaCompilerService = require('./java-compiler-service');
+const DatabaseService = require('./database-service');
 
 const app = express();
 
@@ -39,49 +40,8 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// File-based storage for Vercel (persists across function restarts)
-const DATA_FILE = '/tmp/data.json';
-
-// Load data from file or initialize empty arrays
-let submissions = [];
-let students = [];
-
-// Load existing data
-function loadData() {
-    try {
-        if (fs.existsSync(DATA_FILE)) {
-            const data = fs.readFileSync(DATA_FILE, 'utf8');
-            const parsed = JSON.parse(data);
-            submissions = parsed.submissions || [];
-            students = parsed.students || [];
-            console.log(`📊 Loaded ${submissions.length} submissions and ${students.length} students from storage`);
-        } else {
-            console.log('📊 No existing data found, starting fresh');
-        }
-    } catch (error) {
-        console.error('❌ Error loading data:', error);
-        submissions = [];
-        students = [];
-    }
-}
-
-// Save data to file
-function saveData() {
-    try {
-        const data = {
-            submissions,
-            students,
-            lastSaved: new Date().toISOString()
-        };
-        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-        console.log(`💾 Saved ${submissions.length} submissions and ${students.length} students to storage`);
-    } catch (error) {
-        console.error('❌ Error saving data:', error);
-    }
-}
-
-// Load data on startup
-loadData();
+// Initialize database service
+const db = new DatabaseService();
 
 // Admin credentials
 const adminCredentials = {
@@ -105,6 +65,7 @@ function requireAuth(req, res, next) {
 
 // Health check
 app.get('/api/health', (req, res) => {
+    const stats = db.getStats();
     res.json({ 
         status: 'OK', 
         message: 'Java Grader System with External Compilation',
@@ -112,11 +73,11 @@ app.get('/api/health', (req, res) => {
         version: '2.0.0-vercel-java',
         environment: 'serverless-with-java',
         data: {
-            submissions: submissions.length,
-            students: students.length,
-            persistence: 'file-based',
-            dataFile: DATA_FILE,
-            lastSaved: fs.existsSync(DATA_FILE) ? fs.statSync(DATA_FILE).mtime.toISOString() : 'Never'
+            submissions: stats.submissions,
+            students: stats.students,
+            persistence: 'multi-location-file-based',
+            lastSaved: stats.lastSaved,
+            storageLocations: stats.storageLocations
         }
     });
 });
@@ -237,37 +198,14 @@ app.post('/api/upload', upload.fields([
             ...result
         };
         
-        submissions.push(submission);
+        // Add submission to database
+        db.addSubmission(submission);
         
-        // Update student record (prevent duplicates)
-        let student = students.find(s => s.email === studentEmail);
-        if (!student) {
-            // Create new student record
-            student = {
-                email: studentEmail,
-                name: studentName,
-                submissions: [],
-                bestScore: 0,
-                firstSubmission: new Date().toISOString(),
-                lastSubmission: new Date().toISOString()
-            };
-            students.push(student);
-            console.log(`📝 New student registered: ${studentName} (${studentEmail})`);
-        } else {
-            // Update existing student
-            student.name = studentName; // Update name in case it changed
-            student.lastSubmission = new Date().toISOString();
-            console.log(`📝 Existing student updated: ${studentName} (${studentEmail}) - Attempt #${student.submissions.length + 1}`);
-        }
-        
-        // Add submission to student's history
-        student.submissions.push(submission);
-        
-        // Update best score
-        if (result.grades.total > student.bestScore) {
-            student.bestScore = result.grades.total;
-            console.log(`🏆 New best score for ${studentName}: ${result.grades.total}/100`);
-        }
+        // Update student record
+        const student = db.updateStudent(studentEmail, {
+            name: studentName,
+            submission: submission
+        });
         
         // Log attempt summary
         console.log(`📊 Student ${studentName} submission summary:`);
@@ -276,9 +214,6 @@ app.post('/api/upload', upload.fields([
         console.log(`   - Best score: ${student.bestScore}/100`);
         console.log(`   - Compilation: ${result.compilationSuccess ? 'SUCCESS' : 'FAILED'}`);
         console.log(`   - Execution: ${result.executionSuccess ? 'SUCCESS' : 'FAILED'}`);
-
-        // Save data to file after each submission
-        saveData();
 
         res.json({
             success: true,
@@ -294,6 +229,9 @@ app.post('/api/upload', upload.fields([
 
 // Admin dashboard data
 app.get('/api/admin/dashboard', requireAuth, (req, res) => {
+    const submissions = db.getSubmissions();
+    const students = db.getStudents();
+    
     const totalStudents = students.length;
     const totalSubmissions = submissions.length;
     const averageScore = submissions.length > 0 
@@ -334,7 +272,7 @@ app.get('/api/admin/dashboard', requireAuth, (req, res) => {
 
 // Get student details
 app.get('/api/admin/student/:email', requireAuth, (req, res) => {
-    const student = students.find(s => s.email === req.params.email);
+    const student = db.getStudent(req.params.email);
     if (!student) {
         return res.status(404).json({ error: 'Student not found' });
     }
@@ -368,16 +306,16 @@ app.get('/api/admin/student/:email', requireAuth, (req, res) => {
 
 // Data management endpoint (for debugging)
 app.get('/api/admin/data-status', requireAuth, (req, res) => {
+    const stats = db.getStats();
+    const submissions = db.getSubmissions();
+    
     const dataStatus = {
-        inMemory: {
-            submissions: submissions.length,
-            students: students.length
+        database: {
+            submissions: stats.submissions,
+            students: stats.students,
+            lastSaved: stats.lastSaved
         },
-        fileSystem: {
-            exists: fs.existsSync(DATA_FILE),
-            size: fs.existsSync(DATA_FILE) ? fs.statSync(DATA_FILE).size : 0,
-            lastModified: fs.existsSync(DATA_FILE) ? fs.statSync(DATA_FILE).mtime.toISOString() : null
-        },
+        storageLocations: stats.storageLocations,
         recentSubmissions: submissions.slice(-5).map(s => ({
             id: s.id,
             student: s.studentName,
@@ -393,13 +331,40 @@ app.get('/api/admin/data-status', requireAuth, (req, res) => {
 // Force reload data endpoint (for debugging)
 app.post('/api/admin/reload-data', requireAuth, (req, res) => {
     try {
-        loadData();
+        db.loadData();
+        const stats = db.getStats();
         res.json({
             success: true,
             message: 'Data reloaded successfully',
-            submissions: submissions.length,
-            students: students.length
+            submissions: stats.submissions,
+            students: stats.students
         });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Backup data endpoint
+app.post('/api/admin/backup-data', requireAuth, (req, res) => {
+    try {
+        const backupPath = `./backups/backup-${Date.now()}.json`;
+        const success = db.backupData(backupPath);
+        
+        if (success) {
+            res.json({
+                success: true,
+                message: 'Backup created successfully',
+                backupPath: backupPath
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                error: 'Backup failed'
+            });
+        }
     } catch (error) {
         res.status(500).json({
             success: false,
