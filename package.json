@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node simple-grader.js",
     "dev": "nodemon simple-grader.js",
+    "vercel-build": "echo 'Build completed'",
     "old": "node server.js"
   },
   "dependencies": {

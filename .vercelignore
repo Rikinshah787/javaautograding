@@ -1,0 +1,23 @@
+# Development files
+node_modules/
+uploads/
+data.json
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+test-*.bat
+*.bat
+
+# Documentation
+*.md
+!README.md

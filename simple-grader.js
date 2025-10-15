@@ -17,6 +17,7 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const isVercel = process.env.VERCEL === '1';
 
 // Middleware
 app.use(cors({
@@ -44,7 +45,7 @@ const upload = multer({
 });
 
 // File-based storage for persistence
-const dataFile = 'data.json';
+const dataFile = isVercel ? '/tmp/data.json' : 'data.json';
 
 // Load data from file on startup
 let submissions = [];
@@ -184,7 +185,8 @@ app.post('/api/upload', upload.fields([
         }
 
         const sessionId = `session_${Date.now()}`;
-        const uploadDir = path.join(__dirname, 'uploads', sessionId);
+        const baseDir = isVercel ? '/tmp' : __dirname;
+        const uploadDir = path.join(baseDir, 'uploads', sessionId);
         await fs.ensureDir(uploadDir);
 
         // Move uploaded files
@@ -1051,17 +1053,22 @@ app.get('/admin', (req, res) => {
     }
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Java Grader System running on http://localhost:${PORT}`);
-    console.log(`📚 Student Interface: http://localhost:${PORT}`);
-    console.log(`🔐 Admin Login: http://localhost:${PORT}/login`);
-    console.log(`👨‍🏫 Admin Dashboard: http://localhost:${PORT}/admin`);
-    console.log(`🔧 API Health: http://localhost:${PORT}/api/health`);
-    console.log(`\n🔑 Default Admin Credentials:`);
-    console.log(`   Username: admin`);
-    console.log(`   Password: admin123`);
-});
+// Start server (only if not in Vercel)
+if (!isVercel) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Java Grader System running on http://localhost:${PORT}`);
+        console.log(`📚 Student Interface: http://localhost:${PORT}`);
+        console.log(`🔐 Admin Login: http://localhost:${PORT}/login`);
+        console.log(`👨‍🏫 Admin Dashboard: http://localhost:${PORT}/admin`);
+        console.log(`🔧 API Health: http://localhost:${PORT}/api/health`);
+        console.log(`\n🔑 Default Admin Credentials:`);
+        console.log(`   Username: admin`);
+        console.log(`   Password: admin123`);
+    });
+}
+
+// Export for Vercel
+module.exports = app;
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
