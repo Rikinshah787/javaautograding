@@ -5,7 +5,8 @@
       "src": "simple-grader.js",
       "use": "@vercel/node",
       "config": {
-        "maxLambdaSize": "50mb"
+        "maxLambdaSize": "50mb",
+        "maxDuration": 30
       }
     }
   ],
@@ -15,12 +16,8 @@
       "dest": "simple-grader.js"
     }
   ],
-  "functions": {
-    "simple-grader.js": {
-      "maxDuration": 30
-    }
-  },
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "VERCEL": "1"
   }
 }
