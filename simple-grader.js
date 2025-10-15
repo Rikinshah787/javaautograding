@@ -658,17 +658,24 @@ function calculateGrades(analysis, compilationSuccess, executionSuccess, testRes
     let standardsScore = 0;
     const std = analysis.standards || {};
     
-    // Error handling (8 points) - 1.6 points each
+    // Error handling (8 points) - EASY GRADING
     if (std.hasTryCatch) standardsScore += 1.6;
     
-    // Menu error handling must actually work during execution
-    const hasWorkingMenuErrorHandling = testResults.some(test => 
-        test.name === 'Error Handling Test' && test.success
-    );
-    if (hasWorkingMenuErrorHandling) standardsScore += 1.6;
+    // Menu error handling - give points if code has it, even if not perfect
+    if (std.hasMenuErrorHandling) {
+        standardsScore += 1.6;
+    } else {
+        // Light penalty only
+        standardsScore -= 0.2;
+    }
     
+    // Cash validation - EASY
     if (std.hasCashValidation) standardsScore += 1.6;
+    
+    // Withdrawal validation - EASY  
     if (std.hasWithdrawValidation) standardsScore += 1.6;
+    
+    // Stock validation - EASY
     if (std.hasStockValidation) standardsScore += 1.6;
     
     // Code quality (7 points) - 2.33 points each
@@ -691,50 +698,29 @@ function calculateGrades(analysis, compilationSuccess, executionSuccess, testRes
     
     // No bonus points - follow exact rubric: 4 sections of 25 points each = 100 points total
     
-    // Heavy penalty for compilation failure
+    // EASY GRADING - Only light penalties
     if (!compilationSuccess) {
-        // If compilation fails, cap the total score at 50 and reduce individual scores
-        const maxScore = 50;
-        const reductionFactor = 0.6; // Reduce scores by 40%
+        // Light penalty for compilation failure
+        const reductionFactor = 0.8; // Only 20% reduction
         
         breakdown.transactionHistory = Math.round(breakdown.transactionHistory * reductionFactor);
         breakdown.portfolioManager = Math.round(breakdown.portfolioManager * reductionFactor);
         breakdown.display = Math.round(breakdown.display * reductionFactor);
         breakdown.standards = Math.round(breakdown.standards * reductionFactor);
         
-        totalScore = Math.min(maxScore, Math.round(totalScore * reductionFactor));
+        totalScore = Math.round(totalScore * reductionFactor);
     }
     
-    // Moderate penalty for execution failure (if compilation succeeded)
+    // Very light penalty for execution failure
     if (compilationSuccess && !executionSuccess) {
-        // Only apply penalty if the code structure analysis shows it should work
-        // If all major requirements are met, don't penalize too heavily
-        const hasGoodStructure = (breakdown.transactionHistory >= 20 && 
-                                 breakdown.portfolioManager >= 20 && 
-                                 breakdown.display >= 20 && 
-                                 breakdown.standards >= 20);
+        const executionReductionFactor = 0.95; // Only 5% reduction
         
-        if (hasGoodStructure) {
-            // Light penalty for execution failure if structure is good
-            const executionReductionFactor = 0.9; // Only 10% reduction
-            
-            breakdown.transactionHistory = Math.round(breakdown.transactionHistory * executionReductionFactor);
-            breakdown.portfolioManager = Math.round(breakdown.portfolioManager * executionReductionFactor);
-            breakdown.display = Math.round(breakdown.display * executionReductionFactor);
-            breakdown.standards = Math.round(breakdown.standards * executionReductionFactor);
-            
-            totalScore = Math.round(totalScore * executionReductionFactor);
-        } else {
-            // Heavier penalty if structure is poor
-            const executionReductionFactor = 0.7; // 30% reduction
-            
-            breakdown.transactionHistory = Math.round(breakdown.transactionHistory * executionReductionFactor);
-            breakdown.portfolioManager = Math.round(breakdown.portfolioManager * executionReductionFactor);
-            breakdown.display = Math.round(breakdown.display * executionReductionFactor);
-            breakdown.standards = Math.round(breakdown.standards * executionReductionFactor);
-            
-            totalScore = Math.round(totalScore * executionReductionFactor);
-        }
+        breakdown.transactionHistory = Math.round(breakdown.transactionHistory * executionReductionFactor);
+        breakdown.portfolioManager = Math.round(breakdown.portfolioManager * executionReductionFactor);
+        breakdown.display = Math.round(breakdown.display * executionReductionFactor);
+        breakdown.standards = Math.round(breakdown.standards * executionReductionFactor);
+        
+        totalScore = Math.round(totalScore * executionReductionFactor);
     }
     
     // Ensure total doesn't exceed 100 (4 sections of 25 points each)
@@ -1020,6 +1006,14 @@ function generateFeedback(analysis, grades, compilationSuccess, executionSuccess
         feedback.push('\n⚠️ **NEEDS IMPROVEMENT.** Review requirements and implement missing features.');
     } else {
         feedback.push('\n❌ **SIGNIFICANT IMPROVEMENTS NEEDED.** Major requirements missing.');
+    }
+    
+    // Add actual execution output from student's code
+    if (executionOutput && executionOutput.trim()) {
+        feedback.push('\n📊 **ACTUAL PROGRAM OUTPUT:**');
+        feedback.push('```');
+        feedback.push(executionOutput.trim());
+        feedback.push('```');
     }
     
     // Add test results summary
