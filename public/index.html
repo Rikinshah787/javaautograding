@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Portfolio Grader - Student Submission</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #334155;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .card-content {
+            padding: 3rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section h3 i {
+            color: #3b82f6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .file-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-text {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-subtext {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: #f1f5f9;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .file-icon {
+            color: #3b82f6;
+            font-size: 1.25rem;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .file-size {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .file-remove {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .submit-button {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .score-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .test-output-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .test-output-title {
+            color: #1e293b;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .test-output-content {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .test-scenario {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .test-scenario h5 {
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .test-input {
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .test-output {
+            margin-bottom: 0.75rem;
+        }
+
+        .test-output pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .score-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .score-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .score-item-title {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .score-item-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .score-item.clicked {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .error-details {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fef2f2;
+            border-radius: 8px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .error-details.show {
+            display: block;
+        }
+
+        .error-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .error-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #fecaca;
+            display: flex;
+            align-items: center;
+        }
+
+        .error-list li:last-child {
+            border-bottom: none;
+        }
+
+        .error-icon {
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .error-text {
+            flex: 1;
+            font-size: 0.875rem;
+        }
+
+        .success-icon {
+            color: #10b981;
+        }
+
+        .error-icon {
+            color: #ef4444;
+        }
+
+        .score-item-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .feedback-section {
+            margin-top: 1.5rem;
+        }
+
+        .feedback-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-list {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .feedback-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .feedback-item:last-child {
+            border-bottom: none;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #fecaca;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #bbf7d0;
+        }
+
+        .admin-link {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #374151;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .admin-link:hover {
+            background: white;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .requirements-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .requirements-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .requirements-list {
+            list-style: none;
+        }
+
+        .requirements-list li {
+            padding: 0.5rem 0;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .requirements-list li i {
+            color: #3b82f6;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/admin" class="admin-link">
+        <i class="fas fa-cog"></i> Admin Dashboard
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> Java Portfolio Grader</h1>
+            <p>Submit your Stock Portfolio Application for automated grading</p>
+        </div>
+
+        <div class="main-card">
+            <div class="card-header">
+                <h2>Assignment Submission</h2>
+                <p>Upload your TransactionHistory.java and PortfolioManager.java files</p>
+            </div>
+            
+            <div class="card-content">
+                <div class="requirements-section">
+                    <h3 class="requirements-title">
+                        <i class="fas fa-list-check"></i> Assignment Requirements
+                    </h3>
+                    <ul class="requirements-list">
+                        <li><i class="fas fa-check"></i> TransactionHistory class with 5 private fields</li>
+                        <li><i class="fas fa-check"></i> Default and overloaded constructors</li>
+                        <li><i class="fas fa-check"></i> Getter and setter methods for all fields</li>
+                        <li><i class="fas fa-check"></i> PortfolioManager with ArrayList and menu system</li>
+                        <li><i class="fas fa-check"></i> Complete transaction handling (BUY/SELL/DEPOSIT/WITHDRAW)</li>
+                        <li><i class="fas fa-check"></i> Proper display formatting and error handling</li>
+                    </ul>
+                </div>
+
+                <form id="submission-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Student Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="studentName">Full Name *</label>
+                                <input type="text" id="studentName" name="studentName" class="form-input" 
+                                       placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="studentEmail">Email Address *</label>
+                                <input type="email" id="studentEmail" name="studentEmail" class="form-input" 
+                                       placeholder="Enter your email address" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-file-code"></i> Java Files Upload</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">TransactionHistory.java *</label>
+                                <div class="file-upload-area" onclick="document.getElementById('transactionFile').click()">
+                                    <div class="file-upload-icon">
+                                        <i class="fas fa-file-code"></i>
+                                    </div>
+                                    <div class="file-upload-text">Click to upload TransactionHistory.java</div>
+                                    <div class="file-upload-subtext">or drag and drop your file here</div>
+                                </div>
+                                <input type="file" id="transactionFile" name="transactionHistory" 
+                                       class="file-input" accept=".java" required>
+                                <div class="file-list" id="transactionFileList"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">PortfolioManager.java *</label>
+                                <div class="file-upload-area" onclick="document.getElementById('portfolioFile').click()">
+                                    <div class="file-upload-icon">
+                                        <i class="fas fa-file-code"></i>
+                                    </div>
+                                    <div class="file-upload-text">Click to upload PortfolioManager.java</div>
+                                    <div class="file-upload-subtext">or drag and drop your file here</div>
+                                </div>
+                                <input type="file" id="portfolioFile" name="portfolioManager" 
+                                       class="file-input" accept=".java" required>
+                                <div class="file-list" id="portfolioFileList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-button" id="submitButton">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Submit for Grading</span>
+                    </button>
+                </form>
+
+                <div id="results" class="results-section" style="display: none;">
+                    <div class="results-header">
+                        <h3 class="results-title">Grading Results</h3>
+                        <div class="score-badge" id="totalScore">0/100</div>
+                    </div>
+                    
+                    <div class="results-grid">
+                        <div class="score-breakdown" id="scoreBreakdown">
+                            <!-- Score breakdown will be populated here -->
+                        </div>
+                        
+                        <div class="test-output-section">
+                            <h4 class="test-output-title">
+                                <i class="fas fa-code"></i> Test Output Examples
+                            </h4>
+                            <div class="test-output-content" id="testOutputContent">
+                                <div class="test-scenario">
+                                    <h5>📋 Test Case 1: Basic Transaction</h5>
+                                    <div class="test-input">
+                                        <strong>Input:</strong> Deposit $10000, Buy 20 IBM at $250
+                                    </div>
+                                    <div class="test-output">
+                                        <strong>Expected Output:</strong>
+                                        <pre>Rikin Shah Brokerage Account
+====================================
+0 - Exit
+1 - Deposit Cash
+2 - Withdraw Cash
+3 - Buy Stock
+4 - Sell Stock
+5 - Display Transaction History
+6 - Display Portfolio
+Enter option (0 to 6): 1
+Enter deposit amount: $10000
+✅ $10000.0 deposited successfully!
+
+Enter option (0 to 6): 3
+Enter stock ticker: ibm
+Enter quantity: 20
+Enter price per share: $250
+✅ Bought 20.0 shares of IBM at $250.0 per share!</pre>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-scenario">
+                                    <h5>📊 Test Case 2: Transaction History Display</h5>
+                                    <div class="test-input">
+                                        <strong>Input:</strong> Option 5 (Display Transaction History)
+                                    </div>
+                                    <div class="test-output">
+                                        <strong>Expected Output:</strong>
+                                        <pre>Rikin Shah Brokerage Account
+====================================
+
+Date            Ticker    Quantity      Cost Basis      Trans Type
+==================================================================
+01/15/2024      CASH      10000.00     $1.00          DEPOSIT
+01/15/2024      IBM       20.00        $250.00        BUY
+01/15/2024      CASH      -5000.00     $1.00          WITHDRAW</pre>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-scenario">
+                                    <h5>💼 Test Case 3: Portfolio Display</h5>
+                                    <div class="test-input">
+                                        <strong>Input:</strong> Option 6 (Display Portfolio)
+                                    </div>
+                                    <div class="test-output">
+                                        <strong>Expected Output:</strong>
+                                        <pre>Portfolio as of: 01/15/2024 14:30:25
+====================================
+
+Ticker  Quantity
+================
+CASH    5000.00
+IBM     20.00</pre>
+                                    </div>
+                                </div>
+                                
+                                <div class="test-scenario">
+                                    <h5>❌ Test Case 4: Error Handling</h5>
+                                    <div class="test-input">
+                                        <strong>Input:</strong> Invalid menu choice (abc), then insufficient funds (1000 AAPL at $150)
+                                    </div>
+                                    <div class="test-output">
+                                        <strong>Expected Output:</strong>
+                                        <pre>Enter option (0 to 6): abc
+❌ Error: Please enter a valid number (0-6)
+
+Enter option (0 to 6): 3
+Enter stock ticker: AAPL
+Enter quantity: 1000
+Enter price per share: $150
+❌ Error: Insufficient funds. Required: $150000.0, Available: $5000.0</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feedback-section">
+                        <h4 class="feedback-title">Detailed Feedback</h4>
+                        <div class="feedback-list" id="feedbackList">
+                            <!-- Feedback will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // File upload handling
+        const transactionFileInput = document.getElementById('transactionFile');
+        const portfolioFileInput = document.getElementById('portfolioFile');
+        const transactionFileList = document.getElementById('transactionFileList');
+        const portfolioFileList = document.getElementById('portfolioFileList');
+
+        // TransactionHistory file handling
+        transactionFileInput.addEventListener('change', function(e) {
+            handleFileSelect(e, transactionFileList, 'TransactionHistory.java');
+        });
+
+        // PortfolioManager file handling
+        portfolioFileInput.addEventListener('change', function(e) {
+            handleFileSelect(e, portfolioFileList, 'PortfolioManager.java');
+        });
+
+        function handleFileSelect(event, fileListElement, expectedName) {
+            const file = event.target.files[0];
+            if (file) {
+                fileListElement.innerHTML = `
+                    <div class="file-item">
+                        <div class="file-info">
+                            <i class="fas fa-file-code file-icon"></i>
+                            <div>
+                                <div class="file-name">${file.name}</div>
+                                <div class="file-size">${formatFileSize(file.size)}</div>
+                            </div>
+                        </div>
+                        <button type="button" class="file-remove" onclick="removeFile('${event.target.id}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function removeFile(inputId) {
+            const input = document.getElementById(inputId);
+            const fileList = inputId === 'transactionFile' ? transactionFileList : portfolioFileList;
+            input.value = '';
+            fileList.innerHTML = '';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Form submission
+        document.getElementById('submission-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitButton = document.getElementById('submitButton');
+            const resultsSection = document.getElementById('results');
+            
+            // Validate form
+            const studentName = document.getElementById('studentName').value.trim();
+            const studentEmail = document.getElementById('studentEmail').value.trim();
+            const transactionFile = document.getElementById('transactionFile').files[0];
+            const portfolioFile = document.getElementById('portfolioFile').files[0];
+            
+            if (!studentName || !studentEmail || !transactionFile || !portfolioFile) {
+                showError('Please fill in all required fields and upload both Java files.');
+                return;
+            }
+            
+            // Show loading state
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<div class="loading-spinner"></div><span>Grading in Progress...</span>';
+            
+            // Hide previous results
+            resultsSection.style.display = 'none';
+            
+            try {
+                const formData = new FormData();
+                formData.append('studentName', studentName);
+                formData.append('studentEmail', studentEmail);
+                formData.append('transactionHistory', transactionFile);
+                formData.append('portfolioManager', portfolioFile);
+                
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    displayResults(result);
+                    showSuccess('Submission graded successfully!');
+                } else {
+                    showError(result.error || 'Submission failed. Please try again.');
+                }
+                
+            } catch (error) {
+                console.error('Submission error:', error);
+                showError('Submission failed. Please check your connection and try again.');
+            } finally {
+                // Reset button
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-paper-plane"></i><span>Submit for Grading</span>';
+            }
+        });
+
+        // Toggle error details for each section
+        function toggleErrorDetails(section) {
+            const errorDetails = document.getElementById(section + '-errors');
+            const scoreItem = document.querySelector(`[data-section="${section}"]`);
+            
+            if (errorDetails.classList.contains('show')) {
+                errorDetails.classList.remove('show');
+                scoreItem.classList.remove('clicked');
+            } else {
+                // Close all other error details
+                document.querySelectorAll('.error-details.show').forEach(detail => {
+                    detail.classList.remove('show');
+                });
+                document.querySelectorAll('.score-item.clicked').forEach(item => {
+                    item.classList.remove('clicked');
+                });
+                
+                // Show this section's details
+                errorDetails.classList.add('show');
+                scoreItem.classList.add('clicked');
+            }
+        }
+
+        function displayResults(result) {
+            const resultsSection = document.getElementById('results');
+            const totalScore = document.getElementById('totalScore');
+            const scoreBreakdown = document.getElementById('scoreBreakdown');
+            const feedbackList = document.getElementById('feedbackList');
+            
+            // Display total score
+            totalScore.textContent = `${result.grades?.total || 0}/100`;
+            
+            // Display score breakdown with clickable sections
+            if (result.grades) {
+                scoreBreakdown.innerHTML = `
+                    <div class="score-item" data-section="transactionHistory" onclick="toggleErrorDetails('transactionHistory')">
+                        <div class="score-item-title">TransactionHistory Class</div>
+                        <div class="score-item-value">${result.grades.transactionHistory || 0}/25</div>
+                        <div class="error-details" id="transactionHistory-errors">
+                            <h5>TransactionHistory Class Requirements:</h5>
+                            <ul class="error-list">
+                                <li><i class="${result.analysis?.transactionHistory?.hasTickerField ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Private field 'ticker (String)' - ${result.analysis?.transactionHistory?.hasTickerField ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.transactionHistory?.hasTransDateField ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Private field 'transDate (String)' - ${result.analysis?.transactionHistory?.hasTransDateField ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.transactionHistory?.hasTransTypeField ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Private field 'transType (String)' - ${result.analysis?.transactionHistory?.hasTransTypeField ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.transactionHistory?.hasQtyField ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Private field 'qty (double)' - ${result.analysis?.transactionHistory?.hasQtyField ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.transactionHistory?.hasCostBasisField ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Private field 'costBasis (double)' - ${result.analysis?.transactionHistory?.hasCostBasisField ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.transactionHistory?.hasDefaultConstructor ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Default constructor - ${result.analysis?.transactionHistory?.hasDefaultConstructor ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.transactionHistory?.hasOverloadedConstructor ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Overloaded constructor - ${result.analysis?.transactionHistory?.hasOverloadedConstructor ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.transactionHistory?.hasTickerGetter && result.analysis?.transactionHistory?.hasTickerSetter ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Getter/Setter methods - ${result.analysis?.transactionHistory?.hasTickerGetter && result.analysis?.transactionHistory?.hasTickerSetter ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.transactionHistory?.hasToStringMethod ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">toString method - ${result.analysis?.transactionHistory?.hasToStringMethod ? 'Found' : 'Missing'}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="score-item" data-section="portfolioManager" onclick="toggleErrorDetails('portfolioManager')">
+                        <div class="score-item-title">PortfolioManager Class</div>
+                        <div class="score-item-value">${result.grades.portfolioManager || 0}/25</div>
+                        <div class="error-details" id="portfolioManager-errors">
+                            <h5>PortfolioManager Class Requirements:</h5>
+                            <ul class="error-list">
+                                <li><i class="${result.analysis?.portfolioManager?.hasArrayListAttribute ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">ArrayList portfolioList - ${result.analysis?.portfolioManager?.hasArrayListAttribute ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.portfolioManager?.hasExitOption ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Menu option 'Exit (0)' - ${result.analysis?.portfolioManager?.hasExitOption ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.portfolioManager?.hasDepositOption ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Menu option 'Deposit Cash (1)' - ${result.analysis?.portfolioManager?.hasDepositOption ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.portfolioManager?.hasWithdrawOption ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Menu option 'Withdraw Cash (2)' - ${result.analysis?.portfolioManager?.hasWithdrawOption ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.portfolioManager?.hasBuyOption ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Menu option 'Buy Stock (3)' - ${result.analysis?.portfolioManager?.hasBuyOption ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.portfolioManager?.hasSellOption ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Menu option 'Sell Stock (4)' - ${result.analysis?.portfolioManager?.hasSellOption ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.portfolioManager?.hasHistoryOption ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Menu option 'Display Transaction History (5)' - ${result.analysis?.portfolioManager?.hasHistoryOption ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.portfolioManager?.hasPortfolioOption ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Menu option 'Display Portfolio (6)' - ${result.analysis?.portfolioManager?.hasPortfolioOption ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.portfolioManager?.hasDepositLogic && result.analysis?.portfolioManager?.hasWithdrawLogic ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Transaction handling logic - ${result.analysis?.portfolioManager?.hasDepositLogic && result.analysis?.portfolioManager?.hasWithdrawLogic ? 'Found' : 'Missing'}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="score-item" data-section="display" onclick="toggleErrorDetails('display')">
+                        <div class="score-item-title">Display Requirements</div>
+                        <div class="score-item-value">${result.grades.display || 0}/25</div>
+                        <div class="error-details" id="display-errors">
+                            <h5>Display Requirements:</h5>
+                            <ul class="error-list">
+                                <li><i class="${result.analysis?.display?.hasNameInMenu ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Student name in menu - ${result.analysis?.display?.hasNameInMenu ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.display?.hasNameInHistory ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Student name in transaction history - ${result.analysis?.display?.hasNameInHistory ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.display?.hasHistoryHeader ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Transaction history header - ${result.analysis?.display?.hasHistoryHeader ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.display?.hasHistoryTable ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Transaction history table format - ${result.analysis?.display?.hasHistoryTable ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.display?.hasPortfolioHeader ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Portfolio header - ${result.analysis?.display?.hasPortfolioHeader ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.display?.hasPortfolioTable ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Portfolio table format - ${result.analysis?.display?.hasPortfolioTable ? 'Found' : 'Missing'}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="score-item" data-section="standards" onclick="toggleErrorDetails('standards')">
+                        <div class="score-item-title">Coding Standards</div>
+                        <div class="score-item-value">${result.grades.standards || 0}/25</div>
+                        <div class="error-details" id="standards-errors">
+                            <h5>Coding and Testing Standards:</h5>
+                            <ul class="error-list">
+                                <li><i class="${result.analysis?.standards?.hasTryCatch ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Try-catch error handling - ${result.analysis?.standards?.hasTryCatch ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasMenuErrorHandling ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Menu input error handling - ${result.analysis?.standards?.hasMenuErrorHandling ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasCashValidation ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Cash validation for purchases - ${result.analysis?.standards?.hasCashValidation ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasWithdrawValidation ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Withdrawal amount validation - ${result.analysis?.standards?.hasWithdrawValidation ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasStockValidation ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Stock share validation for selling - ${result.analysis?.standards?.hasStockValidation ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasHeaderComments ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Header comments with name and date - ${result.analysis?.standards?.hasHeaderComments ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasProperFormatting ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Code properly formatted and readable - ${result.analysis?.standards?.hasProperFormatting ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasTickerCapitalization ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Ticker capitalization (toUpperCase) - ${result.analysis?.standards?.hasTickerCapitalization ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasTransactionTypeHandling ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">Transaction type handling - ${result.analysis?.standards?.hasTransactionTypeHandling ? 'Found' : 'Missing'}</span></li>
+                                <li><i class="${result.analysis?.standards?.hasArrayListUsage ? 'fas fa-check success-icon' : 'fas fa-times error-icon'}"></i><span class="error-text">ArrayList methods usage - ${result.analysis?.standards?.hasArrayListUsage ? 'Found' : 'Missing'}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Display feedback
+            if (result.feedback && result.feedback.length > 0) {
+                feedbackList.innerHTML = result.feedback.map(item => 
+                    `<div class="feedback-item">${item}</div>`
+                ).join('');
+            } else {
+                feedbackList.innerHTML = '<div class="feedback-item">No detailed feedback available.</div>';
+            }
+            
+            // Show results
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showError(message) {
+            // Remove existing messages
+            const existingError = document.querySelector('.error-message');
+            const existingSuccess = document.querySelector('.success-message');
+            if (existingError) existingError.remove();
+            if (existingSuccess) existingSuccess.remove();
+            
+            // Create error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            
+            // Insert before form
+            const form = document.getElementById('submission-form');
+            form.parentNode.insertBefore(errorDiv, form);
+        }
+
+        function showSuccess(message) {
+            // Remove existing messages
+            const existingError = document.querySelector('.error-message');
+            const existingSuccess = document.querySelector('.success-message');
+            if (existingError) existingError.remove();
+            if (existingSuccess) existingSuccess.remove();
+            
+            // Create success message
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            // Insert before form
+            const form = document.getElementById('submission-form');
+            form.parentNode.insertBefore(successDiv, form);
+        }
+    </script>
+</body>
+</html>
