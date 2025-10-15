@@ -39,9 +39,49 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// In-memory storage for Vercel
+// File-based storage for Vercel (persists across function restarts)
+const DATA_FILE = '/tmp/data.json';
+
+// Load data from file or initialize empty arrays
 let submissions = [];
 let students = [];
+
+// Load existing data
+function loadData() {
+    try {
+        if (fs.existsSync(DATA_FILE)) {
+            const data = fs.readFileSync(DATA_FILE, 'utf8');
+            const parsed = JSON.parse(data);
+            submissions = parsed.submissions || [];
+            students = parsed.students || [];
+            console.log(`📊 Loaded ${submissions.length} submissions and ${students.length} students from storage`);
+        } else {
+            console.log('📊 No existing data found, starting fresh');
+        }
+    } catch (error) {
+        console.error('❌ Error loading data:', error);
+        submissions = [];
+        students = [];
+    }
+}
+
+// Save data to file
+function saveData() {
+    try {
+        const data = {
+            submissions,
+            students,
+            lastSaved: new Date().toISOString()
+        };
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+        console.log(`💾 Saved ${submissions.length} submissions and ${students.length} students to storage`);
+    } catch (error) {
+        console.error('❌ Error saving data:', error);
+    }
+}
+
+// Load data on startup
+loadData();
 
 // Admin credentials
 const adminCredentials = {
@@ -70,7 +110,14 @@ app.get('/api/health', (req, res) => {
         message: 'Java Grader System with External Compilation',
         timestamp: new Date().toISOString(),
         version: '2.0.0-vercel-java',
-        environment: 'serverless-with-java'
+        environment: 'serverless-with-java',
+        data: {
+            submissions: submissions.length,
+            students: students.length,
+            persistence: 'file-based',
+            dataFile: DATA_FILE,
+            lastSaved: fs.existsSync(DATA_FILE) ? fs.statSync(DATA_FILE).mtime.toISOString() : 'Never'
+        }
     });
 });
 
@@ -230,6 +277,9 @@ app.post('/api/upload', upload.fields([
         console.log(`   - Compilation: ${result.compilationSuccess ? 'SUCCESS' : 'FAILED'}`);
         console.log(`   - Execution: ${result.executionSuccess ? 'SUCCESS' : 'FAILED'}`);
 
+        // Save data to file after each submission
+        saveData();
+
         res.json({
             success: true,
             message: 'Submission graded successfully with REAL Java compilation!',
@@ -314,6 +364,48 @@ app.get('/api/admin/student/:email', requireAuth, (req, res) => {
     };
     
     res.json(studentWithHistory);
+});
+
+// Data management endpoint (for debugging)
+app.get('/api/admin/data-status', requireAuth, (req, res) => {
+    const dataStatus = {
+        inMemory: {
+            submissions: submissions.length,
+            students: students.length
+        },
+        fileSystem: {
+            exists: fs.existsSync(DATA_FILE),
+            size: fs.existsSync(DATA_FILE) ? fs.statSync(DATA_FILE).size : 0,
+            lastModified: fs.existsSync(DATA_FILE) ? fs.statSync(DATA_FILE).mtime.toISOString() : null
+        },
+        recentSubmissions: submissions.slice(-5).map(s => ({
+            id: s.id,
+            student: s.studentName,
+            email: s.studentEmail,
+            score: s.grades.total,
+            timestamp: s.timestamp
+        }))
+    };
+    
+    res.json(dataStatus);
+});
+
+// Force reload data endpoint (for debugging)
+app.post('/api/admin/reload-data', requireAuth, (req, res) => {
+    try {
+        loadData();
+        res.json({
+            success: true,
+            message: 'Data reloaded successfully',
+            submissions: submissions.length,
+            students: students.length
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
 });
 
 // Note: Java compilation is now handled by JavaCompilerService

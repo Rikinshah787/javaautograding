@@ -99,6 +99,13 @@
         </div>
 
         <div class="status-card">
+            <h3>💾 Data Persistence Status</h3>
+            <div id="data-status">
+                <div class="loading">Loading data status...</div>
+            </div>
+        </div>
+
+        <div class="status-card">
             <h3>🔍 Version Comparison</h3>
             <div class="version-info">
                 <strong>Expected Git Version:</strong> <span id="expected-version">Loading...</span><br>
@@ -153,6 +160,7 @@
         // Load deployment info on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadDeploymentInfo();
+            loadDataStatus();
             testHealth();
         });
 
@@ -185,6 +193,38 @@
                 document.getElementById('deployment-info').innerHTML = `
                     <div class="result error">
                         <strong>Error:</strong> Failed to load deployment info<br>
+                        <strong>Details:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function loadDataStatus() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                if (data.data) {
+                    document.getElementById('data-status').innerHTML = `
+                        <div class="result success">
+                            <strong>Submissions:</strong> ${data.data.submissions}<br>
+                            <strong>Students:</strong> ${data.data.students}<br>
+                            <strong>Persistence:</strong> ${data.data.persistence}<br>
+                            <strong>Data File:</strong> ${data.data.dataFile}<br>
+                            <strong>Last Saved:</strong> ${data.data.lastSaved ? new Date(data.data.lastSaved).toLocaleString() : 'Never'}
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('data-status').innerHTML = `
+                        <div class="result error">
+                            <strong>Error:</strong> No data persistence information available
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('data-status').innerHTML = `
+                    <div class="result error">
+                        <strong>Error:</strong> Failed to load data status<br>
                         <strong>Details:</strong> ${error.message}
                     </div>
                 `;
