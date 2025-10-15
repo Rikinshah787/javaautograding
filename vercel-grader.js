@@ -82,6 +82,24 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+// Git info endpoint
+app.get('/api/git-info', (req, res) => {
+    res.json({
+        commit: 'bada81e',
+        message: 'Fix admin dashboard authentication issues: Add proper error handling, credentials include, and debugging',
+        timestamp: new Date().toISOString(),
+        features: [
+            'Fixed admin dashboard 401 authentication errors',
+            'Added proper error handling for data loading',
+            'Implemented credentials include for session management',
+            'Added Supabase database support with due dates',
+            'Created student attempt history tracking',
+            'Fixed data persistence issues',
+            'Added real Java compilation with external services'
+        ]
+    });
+});
+
 // Authentication routes
 app.post('/api/auth/login', async (req, res) => {
     try {

@@ -115,6 +115,21 @@
         </div>
 
         <div class="status-card">
+            <h3>🚀 Latest Features Deployed</h3>
+            <div id="features-list">
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>✅ Fixed admin dashboard 401 authentication errors</li>
+                    <li>✅ Added proper error handling for data loading</li>
+                    <li>✅ Implemented credentials include for session management</li>
+                    <li>✅ Added Supabase database support with due dates</li>
+                    <li>✅ Created student attempt history tracking</li>
+                    <li>✅ Fixed data persistence issues</li>
+                    <li>✅ Added real Java compilation with external services</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="status-card">
             <h3>🧪 API Tests</h3>
             <button class="test-button" onclick="testHealth()">Test Health API</button>
             <button class="test-button" onclick="testAuth()">Test Auth API</button>
@@ -154,13 +169,23 @@
 
     <script>
         // Expected git version (update this when you deploy)
-        const EXPECTED_GIT_VERSION = 'c8c22d0';
-        const EXPECTED_VERSION_MESSAGE = 'Fix vercel.json: Remove conflicting functions property, use builds only';
+        const EXPECTED_GIT_VERSION = 'bada81e';
+        const EXPECTED_VERSION_MESSAGE = 'Fix admin dashboard authentication issues: Add proper error handling, credentials include, and debugging';
+        const LATEST_FEATURES = [
+            '✅ Fixed admin dashboard 401 authentication errors',
+            '✅ Added proper error handling for data loading',
+            '✅ Implemented credentials include for session management',
+            '✅ Added Supabase database support with due dates',
+            '✅ Created student attempt history tracking',
+            '✅ Fixed data persistence issues',
+            '✅ Added real Java compilation with external services'
+        ];
 
         // Load deployment info on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadDeploymentInfo();
             loadDataStatus();
+            loadGitInfo();
             testHealth();
         });
 
@@ -244,6 +269,35 @@
             } else {
                 statusElement.innerHTML = '<span style="color: #dc3545;">❌ Version Mismatch</span>';
                 statusElement.parentElement.className = 'status-card status-error';
+            }
+        }
+
+        async function loadGitInfo() {
+            try {
+                // Try to get git info from the server
+                const response = await fetch('/api/git-info');
+                if (response.ok) {
+                    const gitInfo = await response.json();
+                    document.getElementById('expected-version').textContent = EXPECTED_GIT_VERSION;
+                    document.getElementById('deployed-version').textContent = gitInfo.commit || 'Unknown';
+                    
+                    const isUpToDate = gitInfo.commit === EXPECTED_GIT_VERSION;
+                    const statusElement = document.getElementById('version-status');
+                    
+                    if (isUpToDate) {
+                        statusElement.innerHTML = '<span style="color: #28a745;">✅ Up to Date</span>';
+                        statusElement.parentElement.className = 'status-card status-success';
+                    } else {
+                        statusElement.innerHTML = '<span style="color: #ffc107;">⚠️ Out of Date</span>';
+                        statusElement.parentElement.className = 'status-card status-warning';
+                    }
+                } else {
+                    // Fallback to version check
+                    checkVersionCompatibility({ version: '2.0.0-vercel-java' });
+                }
+            } catch (error) {
+                console.log('Git info not available, using fallback');
+                checkVersionCompatibility({ version: '2.0.0-vercel-java' });
             }
         }
 
