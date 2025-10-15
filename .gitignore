@@ -103,3 +103,4 @@ data.json
 # Logs
 logs
 *.log
+.vercel

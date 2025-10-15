@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Verification - Java Grader System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007acc;
+        }
+        .status-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .status-success {
+            border-left: 4px solid #28a745;
+            background: #d4edda;
+        }
+        .status-error {
+            border-left: 4px solid #dc3545;
+            background: #f8d7da;
+        }
+        .status-warning {
+            border-left: 4px solid #ffc107;
+            background: #fff3cd;
+        }
+        .test-button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .version-info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .git-info {
+            font-family: monospace;
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Java Grader System - Deployment Verification</h1>
+            <p>Testing Vercel deployment and version compatibility</p>
+        </div>
+
+        <div class="status-card">
+            <h3>📊 Current Deployment Info</h3>
+            <div id="deployment-info">
+                <div class="loading">Loading deployment information...</div>
+            </div>
+        </div>
+
+        <div class="status-card">
+            <h3>🔍 Version Comparison</h3>
+            <div class="version-info">
+                <strong>Expected Git Version:</strong> <span id="expected-version">Loading...</span><br>
+                <strong>Deployed Version:</strong> <span id="deployed-version">Loading...</span><br>
+                <strong>Status:</strong> <span id="version-status">Checking...</span>
+            </div>
+        </div>
+
+        <div class="status-card">
+            <h3>🧪 API Tests</h3>
+            <button class="test-button" onclick="testHealth()">Test Health API</button>
+            <button class="test-button" onclick="testAuth()">Test Auth API</button>
+            <button class="test-button" onclick="testUpload()">Test Upload API</button>
+            <button class="test-button" onclick="testAdmin()">Test Admin API</button>
+            <div id="test-results"></div>
+        </div>
+
+        <div class="status-card">
+            <h3>📋 Feature Tests</h3>
+            <button class="test-button" onclick="testStudentInterface()">Test Student Interface</button>
+            <button class="test-button" onclick="testAdminInterface()">Test Admin Interface</button>
+            <button class="test-button" onclick="testFileUpload()">Test File Upload</button>
+            <div id="feature-results"></div>
+        </div>
+
+        <div class="status-card">
+            <h3>📈 Performance Tests</h3>
+            <button class="test-button" onclick="testPerformance()">Test Response Times</button>
+            <button class="test-button" onclick="testConcurrent()">Test Concurrent Requests</button>
+            <div id="performance-results"></div>
+        </div>
+
+        <div class="status-card">
+            <h3>🔧 System Information</h3>
+            <div id="system-info">
+                <div class="git-info">
+                    <strong>Environment:</strong> <span id="environment">Loading...</span><br>
+                    <strong>Platform:</strong> <span id="platform">Loading...</span><br>
+                    <strong>Node Version:</strong> <span id="node-version">Loading...</span><br>
+                    <strong>Deployment Time:</strong> <span id="deployment-time">Loading...</span><br>
+                    <strong>Last Updated:</strong> <span id="last-updated">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Expected git version (update this when you deploy)
+        const EXPECTED_GIT_VERSION = 'c8c22d0';
+        const EXPECTED_VERSION_MESSAGE = 'Fix vercel.json: Remove conflicting functions property, use builds only';
+
+        // Load deployment info on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDeploymentInfo();
+            testHealth();
+        });
+
+        async function loadDeploymentInfo() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                document.getElementById('deployment-info').innerHTML = `
+                    <div class="result success">
+                        <strong>Status:</strong> ${data.status}<br>
+                        <strong>Message:</strong> ${data.message}<br>
+                        <strong>Version:</strong> ${data.version}<br>
+                        <strong>Environment:</strong> ${data.environment}<br>
+                        <strong>Timestamp:</strong> ${new Date(data.timestamp).toLocaleString()}
+                    </div>
+                `;
+
+                // Update system info
+                document.getElementById('environment').textContent = data.environment || 'Unknown';
+                document.getElementById('platform').textContent = navigator.platform;
+                document.getElementById('node-version').textContent = navigator.userAgent;
+                document.getElementById('deployment-time').textContent = new Date(data.timestamp).toLocaleString();
+                document.getElementById('last-updated').textContent = new Date().toLocaleString();
+
+                // Check version compatibility
+                checkVersionCompatibility(data);
+
+            } catch (error) {
+                document.getElementById('deployment-info').innerHTML = `
+                    <div class="result error">
+                        <strong>Error:</strong> Failed to load deployment info<br>
+                        <strong>Details:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function checkVersionCompatibility(data) {
+            document.getElementById('expected-version').textContent = EXPECTED_GIT_VERSION;
+            document.getElementById('deployed-version').textContent = data.version || 'Unknown';
+            
+            const isCompatible = data.version && data.version.includes('2.0.0');
+            const statusElement = document.getElementById('version-status');
+            
+            if (isCompatible) {
+                statusElement.innerHTML = '<span style="color: #28a745;">✅ Compatible</span>';
+                statusElement.parentElement.className = 'status-card status-success';
+            } else {
+                statusElement.innerHTML = '<span style="color: #dc3545;">❌ Version Mismatch</span>';
+                statusElement.parentElement.className = 'status-card status-error';
+            }
+        }
+
+        async function testHealth() {
+            const startTime = Date.now();
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                const responseTime = Date.now() - startTime;
+                
+                addTestResult('test-results', 'Health API', true, 
+                    `Response: ${data.status} | Time: ${responseTime}ms | Version: ${data.version}`);
+            } catch (error) {
+                addTestResult('test-results', 'Health API', false, `Error: ${error.message}`);
+            }
+        }
+
+        async function testAuth() {
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+                
+                addTestResult('test-results', 'Auth API', true, 
+                    `Authenticated: ${data.authenticated} | User: ${data.user ? data.user.username : 'None'}`);
+            } catch (error) {
+                addTestResult('test-results', 'Auth API', false, `Error: ${error.message}`);
+            }
+        }
+
+        async function testUpload() {
+            try {
+                // Create a mock file for testing
+                const formData = new FormData();
+                formData.append('studentName', 'Test Student');
+                formData.append('studentEmail', 'test@example.com');
+                
+                // Create mock files
+                const mockTransactionFile = new File(['public class TransactionHistory {}'], 'TransactionHistory.java', { type: 'text/plain' });
+                const mockPortfolioFile = new File(['public class PortfolioManager {}'], 'PortfolioManager.java', { type: 'text/plain' });
+                
+                formData.append('transactionHistory', mockTransactionFile);
+                formData.append('portfolioManager', mockPortfolioFile);
+
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                addTestResult('test-results', 'Upload API', response.ok, 
+                    `Status: ${response.status} | Success: ${data.success} | Message: ${data.message}`);
+            } catch (error) {
+                addTestResult('test-results', 'Upload API', false, `Error: ${error.message}`);
+            }
+        }
+
+        async function testAdmin() {
+            try {
+                const response = await fetch('/api/admin/dashboard');
+                
+                if (response.status === 401) {
+                    addTestResult('test-results', 'Admin API', true, 'Protected endpoint working (401 Unauthorized)');
+                } else if (response.ok) {
+                    const data = await response.json();
+                    addTestResult('test-results', 'Admin API', true, `Students: ${data.totalStudents} | Submissions: ${data.totalSubmissions}`);
+                } else {
+                    addTestResult('test-results', 'Admin API', false, `Unexpected status: ${response.status}`);
+                }
+            } catch (error) {
+                addTestResult('test-results', 'Admin API', false, `Error: ${error.message}`);
+            }
+        }
+
+        async function testStudentInterface() {
+            try {
+                const response = await fetch('/');
+                addTestResult('feature-results', 'Student Interface', response.ok, 
+                    `Status: ${response.status} | Content-Type: ${response.headers.get('content-type')}`);
+            } catch (error) {
+                addTestResult('feature-results', 'Student Interface', false, `Error: ${error.message}`);
+            }
+        }
+
+        async function testAdminInterface() {
+            try {
+                const response = await fetch('/admin');
+                addTestResult('feature-results', 'Admin Interface', response.ok || response.status === 302, 
+                    `Status: ${response.status} | Redirect: ${response.status === 302 ? 'Yes' : 'No'}`);
+            } catch (error) {
+                addTestResult('feature-results', 'Admin Interface', false, `Error: ${error.message}`);
+            }
+        }
+
+        async function testFileUpload() {
+            try {
+                const response = await fetch('/');
+                const html = await response.text();
+                const hasUploadForm = html.includes('file') && html.includes('upload');
+                
+                addTestResult('feature-results', 'File Upload Form', hasUploadForm, 
+                    `Upload form detected: ${hasUploadForm ? 'Yes' : 'No'}`);
+            } catch (error) {
+                addTestResult('feature-results', 'File Upload Form', false, `Error: ${error.message}`);
+            }
+        }
+
+        async function testPerformance() {
+            const tests = [];
+            for (let i = 0; i < 5; i++) {
+                const startTime = Date.now();
+                try {
+                    await fetch('/api/health');
+                    const responseTime = Date.now() - startTime;
+                    tests.push(responseTime);
+                } catch (error) {
+                    tests.push(-1);
+                }
+            }
+            
+            const avgTime = tests.filter(t => t > 0).reduce((a, b) => a + b, 0) / tests.filter(t => t > 0).length;
+            const successRate = (tests.filter(t => t > 0).length / tests.length) * 100;
+            
+            addTestResult('performance-results', 'Performance Test', successRate > 80, 
+                `Avg Response: ${avgTime.toFixed(0)}ms | Success Rate: ${successRate.toFixed(1)}%`);
+        }
+
+        async function testConcurrent() {
+            const promises = [];
+            for (let i = 0; i < 10; i++) {
+                promises.push(fetch('/api/health'));
+            }
+            
+            try {
+                const responses = await Promise.all(promises);
+                const successCount = responses.filter(r => r.ok).length;
+                
+                addTestResult('performance-results', 'Concurrent Test', successCount >= 8, 
+                    `Successful: ${successCount}/10 requests`);
+            } catch (error) {
+                addTestResult('performance-results', 'Concurrent Test', false, `Error: ${error.message}`);
+            }
+        }
+
+        function addTestResult(containerId, testName, success, message) {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${success ? 'success' : 'error'}`;
+            resultDiv.innerHTML = `<strong>${testName}:</strong> ${message}`;
+            container.appendChild(resultDiv);
+        }
+    </script>
+</body>
+</html>
