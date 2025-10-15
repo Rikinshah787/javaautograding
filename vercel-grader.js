@@ -192,22 +192,43 @@ app.post('/api/upload', upload.fields([
         
         submissions.push(submission);
         
-        // Update student record
+        // Update student record (prevent duplicates)
         let student = students.find(s => s.email === studentEmail);
         if (!student) {
+            // Create new student record
             student = {
                 email: studentEmail,
                 name: studentName,
                 submissions: [],
-                bestScore: 0
+                bestScore: 0,
+                firstSubmission: new Date().toISOString(),
+                lastSubmission: new Date().toISOString()
             };
             students.push(student);
+            console.log(`📝 New student registered: ${studentName} (${studentEmail})`);
+        } else {
+            // Update existing student
+            student.name = studentName; // Update name in case it changed
+            student.lastSubmission = new Date().toISOString();
+            console.log(`📝 Existing student updated: ${studentName} (${studentEmail}) - Attempt #${student.submissions.length + 1}`);
         }
         
+        // Add submission to student's history
         student.submissions.push(submission);
+        
+        // Update best score
         if (result.grades.total > student.bestScore) {
             student.bestScore = result.grades.total;
+            console.log(`🏆 New best score for ${studentName}: ${result.grades.total}/100`);
         }
+        
+        // Log attempt summary
+        console.log(`📊 Student ${studentName} submission summary:`);
+        console.log(`   - Total attempts: ${student.submissions.length}`);
+        console.log(`   - Current score: ${result.grades.total}/100`);
+        console.log(`   - Best score: ${student.bestScore}/100`);
+        console.log(`   - Compilation: ${result.compilationSuccess ? 'SUCCESS' : 'FAILED'}`);
+        console.log(`   - Execution: ${result.executionSuccess ? 'SUCCESS' : 'FAILED'}`);
 
         res.json({
             success: true,
@@ -229,16 +250,35 @@ app.get('/api/admin/dashboard', requireAuth, (req, res) => {
         ? submissions.reduce((sum, sub) => sum + sub.grades.total, 0) / submissions.length 
         : 0;
     
+    // Get recent submissions (last 10)
+    const recentSubmissions = submissions
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .slice(0, 10);
+    
+    // Prepare students data with attempt history
+    const studentsWithHistory = students.map(s => ({
+        email: s.email,
+        name: s.name,
+        submissionCount: s.submissions.length,
+        bestScore: s.bestScore,
+        firstSubmission: s.firstSubmission,
+        lastSubmission: s.lastSubmission,
+        submissions: s.submissions.map(sub => ({
+            id: sub.id,
+            timestamp: sub.timestamp,
+            score: sub.grades.total,
+            compilationSuccess: sub.compilationSuccess,
+            executionSuccess: sub.executionSuccess,
+            grades: sub.grades
+        }))
+    }));
+    
     res.json({
         totalStudents,
         totalSubmissions,
         averageScore: Math.round(averageScore * 100) / 100,
-        recentSubmissions: submissions.slice(-10).reverse(),
-        students: students.map(s => ({
-            ...s,
-            submissionCount: s.submissions.length,
-            lastSubmission: s.submissions[s.submissions.length - 1]?.timestamp
-        }))
+        recentSubmissions,
+        students: studentsWithHistory
     });
 });
 
@@ -248,7 +288,32 @@ app.get('/api/admin/student/:email', requireAuth, (req, res) => {
     if (!student) {
         return res.status(404).json({ error: 'Student not found' });
     }
-    res.json(student);
+    
+    // Return student with full submission history
+    const studentWithHistory = {
+        email: student.email,
+        name: student.name,
+        submissionCount: student.submissions.length,
+        bestScore: student.bestScore,
+        firstSubmission: student.firstSubmission,
+        lastSubmission: student.lastSubmission,
+        submissions: student.submissions
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)) // Most recent first
+            .map(sub => ({
+                id: sub.id,
+                timestamp: sub.timestamp,
+                score: sub.grades.total,
+                compilationSuccess: sub.compilationSuccess,
+                executionSuccess: sub.executionSuccess,
+                compilationErrors: sub.compilationErrors,
+                executionOutput: sub.executionOutput,
+                grades: sub.grades,
+                feedback: sub.feedback,
+                testResults: sub.testResults
+            }))
+    };
+    
+    res.json(studentWithHistory);
 });
 
 // Note: Java compilation is now handled by JavaCompilerService

@@ -174,6 +174,95 @@
             overflow: hidden;
         }
 
+        .view-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .view-btn:hover {
+            background: #2563eb;
+        }
+
+        .view-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .attempt-count {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .attempt-history {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .attempt-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .attempt-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .attempt-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .attempt-score {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .attempt-date {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .attempt-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .attempt-details-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .attempt-details-btn:hover {
+            background: #059669;
+        }
+
         .table-header {
             padding: 1.5rem 2rem;
             border-bottom: 1px solid #e2e8f0;
@@ -614,37 +703,66 @@
                 return;
             }
             
+            // Group submissions by student email
+            const studentGroups = {};
+            submissions.forEach(sub => {
+                if (!studentGroups[sub.studentEmail]) {
+                    studentGroups[sub.studentEmail] = {
+                        studentName: sub.studentName,
+                        studentEmail: sub.studentEmail,
+                        submissions: []
+                    };
+                }
+                studentGroups[sub.studentEmail].submissions.push(sub);
+            });
+
             const table = `
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Student</th>
                             <th>Email</th>
-                            <th>Score</th>
-                            <th>TransactionHistory</th>
-                            <th>PortfolioManager</th>
-                            <th>Display</th>
-                            <th>Standards</th>
-                            <th>Date</th>
+                            <th>Best Score</th>
+                            <th>Attempts</th>
+                            <th>Last Submission</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${submissions.map(sub => `
-                            <tr>
-                                <td>${sub.studentName}</td>
-                                <td>${sub.studentEmail}</td>
-                                <td>
-                                    <span class="score-badge ${getScoreClass(sub.grades.total)}">
-                                        ${sub.grades.total}/100
-                                    </span>
-                                </td>
-                                <td>${sub.grades.transactionHistory || 0}/25</td>
-                                <td>${sub.grades.portfolioManager || 0}/25</td>
-                                <td>${sub.grades.display || 0}/25</td>
-                                <td>${sub.grades.standards || 0}/25</td>
-                                <td>${new Date(sub.timestamp).toLocaleDateString()}</td>
-                            </tr>
-                        `).join('')}
+                        ${Object.values(studentGroups).map(student => {
+                            const bestSubmission = student.submissions.reduce((best, current) => 
+                                current.grades.total > best.grades.total ? current : best
+                            );
+                            const attemptCount = student.submissions.length;
+                            const lastSubmission = student.submissions[student.submissions.length - 1];
+                            
+                            return `
+                                <tr>
+                                    <td>${student.studentName}</td>
+                                    <td>${student.studentEmail}</td>
+                                    <td>
+                                        <span class="score-badge ${getScoreClass(bestSubmission.grades.total)}">
+                                            ${bestSubmission.grades.total}/100
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="attempt-count">${attemptCount} attempt${attemptCount > 1 ? 's' : ''}</span>
+                                    </td>
+                                    <td>${new Date(lastSubmission.timestamp).toLocaleDateString()}</td>
+                                    <td>
+                                        <span class="score-badge ${lastSubmission.compilationSuccess ? 'score-excellent' : 'score-poor'}">
+                                            ${lastSubmission.compilationSuccess ? 'Compiled' : 'Failed'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="view-btn" onclick="viewStudentAttempts('${student.studentEmail}')">
+                                            View Attempts
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
                     </tbody>
                 </table>
             `;
@@ -658,6 +776,107 @@
             if (score >= 80) return 'score-good';
             if (score >= 70) return 'score-fair';
             return 'score-poor';
+        }
+
+        // View student attempts
+        async function viewStudentAttempts(studentEmail) {
+            try {
+                const response = await fetch(`/api/admin/student/${encodeURIComponent(studentEmail)}`);
+                const student = await response.json();
+                
+                if (student && student.submissions) {
+                    showAttemptHistory(student);
+                } else {
+                    alert('No submission history found for this student');
+                }
+            } catch (error) {
+                console.error('Failed to load student attempts:', error);
+                alert('Failed to load student attempts');
+            }
+        }
+
+        // Show attempt history modal
+        function showAttemptHistory(student) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: white;
+                border-radius: 12px;
+                padding: 2rem;
+                max-width: 800px;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            `;
+            
+            const attemptsHtml = student.submissions.map((submission, index) => `
+                <div class="attempt-item">
+                    <div class="attempt-info">
+                        <div class="attempt-score">
+                            Attempt ${index + 1}: ${submission.grades.total}/100
+                        </div>
+                        <div class="attempt-date">
+                            ${new Date(submission.timestamp).toLocaleString()}
+                        </div>
+                        <div style="font-size: 0.75rem; color: #6b7280;">
+                            TH: ${submission.grades.transactionHistory}/25 | 
+                            PM: ${submission.grades.portfolioManager}/25 | 
+                            Display: ${submission.grades.display}/25 | 
+                            Standards: ${submission.grades.standards}/25
+                        </div>
+                    </div>
+                    <div class="attempt-actions">
+                        <button class="attempt-details-btn" onclick="viewSubmissionDetails('${submission.id}')">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            modalContent.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0; color: #1f2937;">Submission History: ${student.name}</h3>
+                    <button onclick="this.closest('.modal').remove()" style="background: #ef4444; color: white; border: none; padding: 0.5rem; border-radius: 6px; cursor: pointer;">×</button>
+                </div>
+                <div style="margin-bottom: 1rem; padding: 1rem; background: #f3f4f6; border-radius: 8px;">
+                    <strong>Email:</strong> ${student.email}<br>
+                    <strong>Total Attempts:</strong> ${student.submissions.length}<br>
+                    <strong>Best Score:</strong> ${Math.max(...student.submissions.map(s => s.grades.total))}/100
+                </div>
+                <div class="attempt-history" style="display: block;">
+                    ${attemptsHtml}
+                </div>
+            `;
+            
+            modal.className = 'modal';
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // View submission details
+        function viewSubmissionDetails(submissionId) {
+            // This would show detailed feedback for a specific submission
+            alert(`Viewing details for submission: ${submissionId}\n\nThis would show the full grading feedback, compilation errors, and execution output.`);
         }
 
         // Logout function
