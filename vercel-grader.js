@@ -11,7 +11,7 @@ const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const JavaCompilerService = require('./java-compiler-service');
-const DatabaseService = require('./database-service');
+const { createDatabaseService } = require('./database-config');
 
 const app = express();
 
@@ -40,8 +40,8 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// Initialize database service
-const db = new DatabaseService();
+// Initialize database service (configurable)
+const db = createDatabaseService();
 
 // Admin credentials
 const adminCredentials = {
