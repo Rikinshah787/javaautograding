@@ -53,7 +53,7 @@
             font-size: 0.875rem;
         }
 
-        .nav-menu {
+        .sidebar-nav {
             padding: 2rem 0;
         }
 
@@ -62,19 +62,19 @@
             padding: 0.75rem 2rem;
             color: #cbd5e1;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
             border-left: 3px solid transparent;
         }
 
         .nav-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: #475569;
             color: white;
         }
 
         .nav-item.active {
-            background: rgba(59, 130, 246, 0.1);
-            color: #60a5fa;
-            border-left-color: #3b82f6;
+            background: #3b82f6;
+            color: white;
+            border-left-color: #60a5fa;
         }
 
         .nav-item i {
@@ -91,10 +91,10 @@
 
         .header {
             background: white;
-            border-radius: 12px;
             padding: 1.5rem 2rem;
-            margin-bottom: 2rem;
+            border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -106,164 +106,84 @@
             color: #1e293b;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: #3b82f6;
+        .logout-btn {
+            background: #ef4444;
             color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
         }
 
-        .btn-primary:hover {
-            background: #2563eb;
+        .logout-btn:hover {
+            background: #dc2626;
         }
 
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #475569;
+        /* Content Sections */
+        .content-section {
+            display: none;
         }
 
-        .btn-secondary:hover {
-            background: #cbd5e1;
+        .content-section.active {
+            display: block;
         }
 
-        /* Dashboard Grid */
-        .dashboard-grid {
+        /* Stats Cards */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
             background: white;
-            border-radius: 12px;
             padding: 1.5rem;
+            border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border-left: 4px solid #3b82f6;
         }
 
-        .stat-card.success {
-            border-left-color: #10b981;
-        }
-
-        .stat-card.warning {
-            border-left-color: #f59e0b;
-        }
-
-        .stat-card.danger {
-            border-left-color: #ef4444;
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .stat-title {
+        .stat-card h3 {
             font-size: 0.875rem;
-            font-weight: 500;
             color: #64748b;
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
-
-        .stat-icon.primary {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-        }
-
-        .stat-icon.success {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-        }
-
-        .stat-icon.warning {
-            background: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
-        }
-
-        .stat-icon.danger {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-        }
-
-        .stat-value {
+        .stat-card .value {
             font-size: 2rem;
             font-weight: 700;
             color: #1e293b;
             margin-bottom: 0.25rem;
         }
 
-        .stat-change {
+        .stat-card .change {
             font-size: 0.875rem;
-            color: #64748b;
-        }
-
-        .stat-change.positive {
             color: #10b981;
         }
 
-        .stat-change.negative {
-            color: #ef4444;
-        }
-
-        /* Content Cards */
-        .content-card {
+        /* Tables */
+        .table-container {
             background: white;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
-        .card-header {
+        .table-header {
             padding: 1.5rem 2rem;
             border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: #f8fafc;
         }
 
-        .card-title {
+        .table-header h3 {
             font-size: 1.25rem;
             font-weight: 600;
             color: #1e293b;
-        }
-
-        .card-content {
-            padding: 2rem;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
         }
 
         .table {
@@ -273,16 +193,15 @@
 
         .table th {
             background: #f8fafc;
-            padding: 0.75rem 1rem;
+            padding: 1rem 2rem;
             text-align: left;
             font-weight: 600;
             color: #475569;
             border-bottom: 1px solid #e2e8f0;
-            font-size: 0.875rem;
         }
 
         .table td {
-            padding: 0.75rem 1rem;
+            padding: 1rem 2rem;
             border-bottom: 1px solid #f1f5f9;
         }
 
@@ -290,86 +209,111 @@
             background: #f8fafc;
         }
 
-        /* Badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
+        .score-badge {
+            display: inline-block;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
-            font-size: 0.75rem;
+            font-size: 0.875rem;
             font-weight: 500;
         }
 
-        .badge-success {
-            background: rgba(16, 185, 129, 0.1);
-            color: #059669;
+        .score-excellent {
+            background: #dcfce7;
+            color: #166534;
         }
 
-        .badge-warning {
-            background: rgba(245, 158, 11, 0.1);
-            color: #d97706;
+        .score-good {
+            background: #dbeafe;
+            color: #1e40af;
         }
 
-        .badge-danger {
-            background: rgba(239, 68, 68, 0.1);
-            color: #dc2626;
+        .score-fair {
+            background: #fef3c7;
+            color: #92400e;
         }
 
-        .badge-info {
-            background: rgba(59, 130, 246, 0.1);
-            color: #2563eb;
+        .score-poor {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
-        /* Filters */
-        .filters {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
+        /* Settings */
+        .settings-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+        .settings-group {
+            margin-bottom: 2rem;
         }
 
-        .filter-label {
-            font-size: 0.875rem;
+        .settings-group h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
             font-weight: 500;
             color: #374151;
+            margin-bottom: 0.5rem;
         }
 
-        .filter-input {
-            padding: 0.5rem 0.75rem;
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
             border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
+            border-radius: 8px;
+            font-size: 1rem;
         }
 
-        .filter-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
         }
 
-        /* Loading States */
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        /* Loading */
         .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem;
+            text-align: center;
+            padding: 2rem;
             color: #64748b;
         }
 
         .spinner {
+            display: inline-block;
             width: 20px;
             height: 20px;
-            border: 2px solid #e2e8f0;
-            border-top: 2px solid #3b82f6;
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 0.5rem;
         }
 
         @keyframes spin {
@@ -378,10 +322,10 @@
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
+        @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
+                transition: transform 0.3s;
             }
 
             .sidebar.open {
@@ -392,589 +336,165 @@
                 margin-left: 0;
             }
 
-            .dashboard-grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
-        }
-
-        /* Charts */
-        .chart-container {
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-            position: relative;
-        }
-
-        .chart-container canvas {
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        .error-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .error-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 8px;
-            border-left: 4px solid #ef4444;
-        }
-
-        .error-type {
-            font-weight: 500;
-            color: #374151;
-        }
-
-        .error-count {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #ef4444;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .metric-item {
-            text-align: center;
-            padding: 1.5rem;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .metric-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-        }
-
-        .metric-label {
-            font-size: 0.875rem;
-            color: #64748b;
-            font-weight: 500;
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        /* Empty States */
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #64748b;
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: #374151;
-        }
-
-        .empty-state p {
-            font-size: 0.875rem;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #64748b;
-        }
-
-        /* Progress Bars */
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #3b82f6;
-            transition: width 0.3s ease;
-        }
-
-        .progress-fill.success {
-            background: #10b981;
-        }
-
-        .progress-fill.warning {
-            background: #f59e0b;
-        }
-
-        .progress-fill.danger {
-            background: #ef4444;
-        }
-
-        /* Back to Student Link */
-        .back-link {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: #6b7280;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: background 0.2s ease;
-        }
-
-        .back-link:hover {
-            background: #4b5563;
         }
     </style>
 </head>
 <body>
     <div class="dashboard">
         <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
+        <div class="sidebar">
             <div class="sidebar-header">
-                <h1><i class="fas fa-graduation-cap"></i> Java Grader</h1>
+                <h1>Java Grader</h1>
                 <p>Admin Dashboard</p>
             </div>
-            <div class="nav-menu">
-                <a href="#" class="nav-item active" data-section="overview">
-                    <i class="fas fa-chart-pie"></i> Overview
-                </a>
-                <a href="#" class="nav-item" data-section="students">
-                    <i class="fas fa-users"></i> Students
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
                 </a>
                 <a href="#" class="nav-item" data-section="submissions">
-                    <i class="fas fa-file-upload"></i> Submissions
-                </a>
-                <a href="#" class="nav-item" data-section="analytics">
-                    <i class="fas fa-chart-line"></i> Analytics
-                </a>
-                <a href="#" class="nav-item" data-section="errors">
-                    <i class="fas fa-exclamation-triangle"></i> Error Logs
+                    <i class="fas fa-file-upload"></i>
+                    Student Submissions
                 </a>
                 <a href="#" class="nav-item" data-section="settings">
-                    <i class="fas fa-cog"></i> Settings
+                    <i class="fas fa-cog"></i>
+                    Settings
                 </a>
-            </div>
-        </nav>
+            </nav>
+        </div>
 
         <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="header">
-                <h2 id="page-title">Dashboard Overview</h2>
-            <div class="header-actions">
-                <button class="btn btn-secondary" onclick="exportData()">
-                    <i class="fas fa-download"></i> Export Data
-                </button>
-                <button class="btn btn-primary" onclick="refreshData()">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
-                <button class="btn btn-secondary" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+        <div class="main-content">
+            <div class="header">
+                <h2 id="page-title">Dashboard</h2>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
                 </button>
             </div>
-            </header>
 
-            <!-- Overview Section -->
-            <section id="overview-section" class="content-section">
-                <div class="dashboard-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <span class="stat-title">Total Students</span>
-                            <div class="stat-icon primary">
-                                <i class="fas fa-users"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="total-students">-</div>
-                        <div class="stat-change" id="students-change">Loading...</div>
-                    </div>
-
-                    <div class="stat-card success">
-                        <div class="stat-header">
-                            <span class="stat-title">Total Submissions</span>
-                            <div class="stat-icon success">
-                                <i class="fas fa-file-upload"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="total-submissions">-</div>
-                        <div class="stat-change" id="submissions-change">Loading...</div>
-                    </div>
-
-                    <div class="stat-card warning">
-                        <div class="stat-header">
-                            <span class="stat-title">Average Score</span>
-                            <div class="stat-icon warning">
-                                <i class="fas fa-chart-bar"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="average-score">-</div>
-                        <div class="stat-change" id="score-change">Loading...</div>
-                    </div>
-
-                    <div class="stat-card danger">
-                        <div class="stat-header">
-                            <span class="stat-title">Recent Activity</span>
-                            <div class="stat-icon danger">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="recent-activity">-</div>
-                        <div class="stat-change" id="activity-change">Loading...</div>
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="content-section active">
+                <div class="stats-grid" id="stats-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading dashboard data...</p>
                     </div>
                 </div>
 
-                <div class="dashboard-grid">
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Recent Submissions</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="loading" id="recent-submissions-loading">
-                                <div class="spinner"></div>
-                                Loading recent submissions...
-                            </div>
-                            <div id="recent-submissions-content" style="display: none;">
-                                <!-- Recent submissions will be loaded here -->
-                            </div>
-                        </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Recent Submissions</h3>
                     </div>
-
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Grade Distribution</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="loading" id="grade-distribution-loading">
-                                <div class="spinner"></div>
-                                Loading grade distribution...
-                            </div>
-                            <div id="grade-distribution-content" style="display: none;">
-                                <!-- Grade distribution will be loaded here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Students Section -->
-            <section id="students-section" class="content-section" style="display: none;">
-                <div class="content-card">
-                    <div class="card-header">
-                        <h3 class="card-title">Student Performance</h3>
-                        <div class="filters">
-                            <div class="filter-group">
-                                <label class="filter-label">Search</label>
-                                <input type="text" class="filter-input" id="student-search" placeholder="Search students...">
-                            </div>
-                            <div class="filter-group">
-                                <label class="filter-label">Sort By</label>
-                                <select class="filter-input" id="student-sort">
-                                    <option value="bestScore">Best Score</option>
-                                    <option value="submissionCount">Total Submissions</option>
-                                    <option value="name">Name</option>
-                                    <option value="lastSubmission">Last Submission</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="loading" id="students-loading">
+                    <div id="recent-submissions">
+                        <div class="loading">
                             <div class="spinner"></div>
-                            Loading students...
-                        </div>
-                        <div class="table-container" id="students-table-container" style="display: none;">
-                            <table class="table" id="students-table">
-                                <thead>
-                                    <tr>
-                                        <th>Student</th>
-                                        <th>Email</th>
-                                        <th>Submissions</th>
-                                        <th>Best Score</th>
-                                        <th>Last Submission</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="students-table-body">
-                                    <!-- Students will be loaded here -->
-                                </tbody>
-                            </table>
+                            <p>Loading recent submissions...</p>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Analytics Section -->
-            <section id="analytics-section" class="content-section" style="display: none;">
-                <div class="dashboard-grid">
-                    <!-- Grade Distribution Chart -->
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Grade Distribution</h3>
-                        </div>
-                        <div class="card-content">
-                            <div id="grade-distribution-chart" class="chart-container">
-                                <canvas id="gradeChart" width="400" height="200"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Submission Trends -->
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Submission Trends</h3>
-                        </div>
-                        <div class="card-content">
-                            <div id="submission-trends-chart" class="chart-container">
-                                <canvas id="trendsChart" width="400" height="200"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Common Errors Analysis -->
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Common Compilation Errors</h3>
-                        </div>
-                        <div class="card-content">
-                            <div id="error-analysis">
-                                <div class="error-stats">
-                                    <div class="error-item">
-                                        <span class="error-type">Missing Fields</span>
-                                        <span class="error-count" id="missing-fields-count">0</span>
-                                    </div>
-                                    <div class="error-item">
-                                        <span class="error-type">Compilation Errors</span>
-                                        <span class="error-count" id="compilation-errors-count">0</span>
-                                    </div>
-                                    <div class="error-item">
-                                        <span class="error-type">Missing Methods</span>
-                                        <span class="error-count" id="missing-methods-count">0</span>
-                                    </div>
-                                    <div class="error-item">
-                                        <span class="error-type">Logic Errors</span>
-                                        <span class="error-count" id="logic-errors-count">0</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Performance Metrics -->
-                    <div class="content-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Performance Metrics</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="metrics-grid">
-                                <div class="metric-item">
-                                    <div class="metric-value" id="avg-score">0</div>
-                                    <div class="metric-label">Average Score</div>
-                                </div>
-                                <div class="metric-item">
-                                    <div class="metric-value" id="pass-rate">0%</div>
-                                    <div class="metric-label">Pass Rate (≥70%)</div>
-                                </div>
-                                <div class="metric-item">
-                                    <div class="metric-value" id="compilation-rate">0%</div>
-                                    <div class="metric-label">Compilation Success</div>
-                                </div>
-                                <div class="metric-item">
-                                    <div class="metric-value" id="execution-rate">0%</div>
-                                    <div class="metric-label">Execution Success</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Student Performance Table -->
-                    <div class="content-card full-width">
-                        <div class="card-header">
-                            <h3 class="card-title">Student Performance Analysis</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="table-container">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Student</th>
-                                            <th>Email</th>
-                                            <th>Attempts</th>
-                                            <th>Best Score</th>
-                                            <th>Last Submission</th>
-                                            <th>Status</th>
-                                            <th>Common Issues</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="performance-table-body">
-                                        <!-- Performance data will be loaded here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <a href="/" class="back-link">
-        <i class="fas fa-arrow-left"></i> Back to Student Interface
-    </a>
-
-    <!-- Student Details Modal -->
-    <div class="modal" id="student-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Student Details</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
-            <div id="student-modal-content">
-                <!-- Student details will be loaded here -->
+
+            <!-- Submissions Section -->
+            <div id="submissions" class="content-section">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>All Student Submissions</h3>
+                    </div>
+                    <div id="all-submissions">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading submissions...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="content-section">
+                <div class="settings-section">
+                    <div class="settings-group">
+                        <h4>System Information</h4>
+                        <div class="form-group">
+                            <label>System Status</label>
+                            <input type="text" value="Online" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Submissions</label>
+                            <input type="text" id="total-submissions-count" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Students</label>
+                            <input type="text" id="total-students-count" readonly>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h4>Grading Settings</h4>
+                        <div class="form-group">
+                            <label>Rubric Version</label>
+                            <input type="text" value="Very Easy Rubric v2.0" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Partial Credit</label>
+                            <input type="text" value="Enabled (60-80% for missing items)" readonly>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Global state
-        let currentSection = 'overview';
-        let dashboardData = {};
-        let studentsData = [];
-
-        // Initialize dashboard
+        // Check authentication on page load
         document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
-            initializeNavigation();
+            checkAuth();
             loadDashboardData();
-            setInterval(loadDashboardData, 30000); // Refresh every 30 seconds
         });
 
         // Navigation
-        function initializeNavigation() {
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const section = this.dataset.section;
-                    switchSection(section);
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all nav items
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Hide all content sections
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
                 });
-            });
-        }
-
-        function switchSection(section) {
-            // Update navigation
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector(`[data-section="${section}"]`).classList.add('active');
-
-            // Update content
-            document.querySelectorAll('.content-section').forEach(sec => {
-                sec.style.display = 'none';
-            });
-            document.getElementById(`${section}-section`).style.display = 'block';
-
-            // Update page title
-            const titles = {
-                overview: 'Dashboard Overview',
-                students: 'Student Management',
-                submissions: 'Submission History',
-                analytics: 'Analytics & Reports',
-                errors: 'Error Logs',
-                settings: 'Settings'
-            };
-            document.getElementById('page-title').textContent = titles[section];
-
-            // Load section-specific data
-            currentSection = section;
-            switch (section) {
-                case 'overview':
+                
+                // Show selected section
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Update page title
+                const pageTitle = this.textContent.trim();
+                document.getElementById('page-title').textContent = pageTitle;
+                
+                // Load section data
+                if (sectionId === 'dashboard') {
                     loadDashboardData();
-                    break;
-                case 'students':
-                    loadStudentsData();
-                    break;
-                case 'analytics':
-                    loadAnalyticsData();
-                    break;
-            }
-        }
+                } else if (sectionId === 'submissions') {
+                    loadSubmissionsData();
+                }
+            });
+        });
 
-        // Check authentication status
-        async function checkAuthStatus() {
+        // Check authentication
+        async function checkAuth() {
             try {
-                const response = await fetch('/api/auth/status', {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (!data.authenticated) {
-                        window.location.href = '/login';
-                        return;
-                    }
-                } else {
+                const response = await fetch('/api/auth/status');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
                     window.location.href = '/login';
                 }
             } catch (error) {
@@ -983,569 +503,178 @@
             }
         }
 
-        // Logout function
-        async function logout() {
-            try {
-                const response = await fetch('/api/auth/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    window.location.href = '/login';
-                } else {
-                    console.error('Logout failed');
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-                // Force redirect even if logout fails
-                window.location.href = '/login';
-            }
-        }
-
-        // API calls
-        async function apiCall(endpoint, options = {}) {
-            try {
-                const response = await fetch(`/api${endpoint}`, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    ...options
-                });
-
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        window.location.href = '/login';
-                        return;
-                    }
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                return await response.json();
-            } catch (error) {
-                console.error('API call failed:', error);
-                return getMockData(endpoint);
-            }
-        }
-
-        // Mock data for demo
-        function getMockData(endpoint) {
-            const mockData = {
-                '/admin/dashboard': {
-                    totalStudents: 0,
-                    totalSubmissions: 0,
-                    averageScore: 0,
-                    recentSubmissions: [],
-                    students: []
-                }
-            };
-
-            return mockData[endpoint] || {};
-        }
-
         // Load dashboard data
         async function loadDashboardData() {
-            try {
-                const data = await apiCall('/admin/dashboard');
-                dashboardData = data;
-
-                // Update overview cards
-                document.getElementById('total-students').textContent = data.totalStudents || 0;
-                document.getElementById('total-submissions').textContent = data.totalSubmissions || 0;
-                document.getElementById('average-score').textContent = (data.averageScore || 0).toFixed(1);
-                document.getElementById('recent-activity').textContent = data.recentSubmissions?.length || 0;
-
-                // Update change indicators
-                document.getElementById('students-change').textContent = 'No data yet';
-                document.getElementById('submissions-change').textContent = 'No data yet';
-                document.getElementById('score-change').textContent = 'No data yet';
-                document.getElementById('activity-change').textContent = 'No data yet';
-
-                // Load recent submissions
-                loadRecentSubmissions();
-                
-                // Load grade distribution
-                loadGradeDistribution();
-            } catch (error) {
-                console.error('Failed to load dashboard data:', error);
-            }
-        }
-
-        // Load recent submissions
-        function loadRecentSubmissions() {
-            const container = document.getElementById('recent-submissions-content');
-            const loading = document.getElementById('recent-submissions-loading');
-            
-            if (dashboardData.recentSubmissions && dashboardData.recentSubmissions.length > 0) {
-                container.innerHTML = '';
-                
-                dashboardData.recentSubmissions.forEach(submission => {
-                    const submissionElement = document.createElement('div');
-                    submissionElement.style.cssText = 'padding: 1rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;';
-                    submissionElement.innerHTML = `
-                        <div>
-                            <div style="font-weight: 500;">${submission.studentName}</div>
-                            <div style="font-size: 0.875rem; color: #64748b;">${submission.studentEmail}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div class="badge ${getScoreBadgeClass(submission.grades?.total || 0)}">${submission.grades?.total || 0}</div>
-                            <div style="font-size: 0.875rem; color: #64748b;">${formatDate(submission.timestamp)}</div>
-                        </div>
-                    `;
-                    container.appendChild(submissionElement);
-                });
-                
-                loading.style.display = 'none';
-                container.style.display = 'block';
-            } else {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><h3>No Recent Submissions</h3><p>Students haven\'t submitted any work yet.</p></div>';
-                loading.style.display = 'none';
-                container.style.display = 'block';
-            }
-        }
-
-        // Load grade distribution
-        function loadGradeDistribution() {
-            const container = document.getElementById('grade-distribution-content');
-            const loading = document.getElementById('grade-distribution-loading');
-            
-            // Mock grade distribution
-            const distribution = {
-                'A (90-100)': 0,
-                'B (80-89)': 0,
-                'C (70-79)': 0,
-                'D (60-69)': 0,
-                'F (0-59)': 0
-            };
-
-            if (dashboardData.recentSubmissions && dashboardData.recentSubmissions.length > 0) {
-                dashboardData.recentSubmissions.forEach(submission => {
-                    const score = submission.grades?.total || 0;
-                    if (score >= 90) distribution['A (90-100)']++;
-                    else if (score >= 80) distribution['B (80-89)']++;
-                    else if (score >= 70) distribution['C (70-79)']++;
-                    else if (score >= 60) distribution['D (60-69)']++;
-                    else distribution['F (0-59)']++;
-                });
-            }
-
-            container.innerHTML = '';
-
-            Object.entries(distribution).forEach(([grade, count]) => {
-                const total = Object.values(distribution).reduce((sum, val) => sum + val, 0);
-                const percentage = total > 0 ? (count / total) * 100 : 0;
-
-                const gradeElement = document.createElement('div');
-                gradeElement.style.marginBottom = '1rem';
-                gradeElement.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span style="font-weight: 500;">${grade}</span>
-                        <span style="color: #64748b;">${count} (${percentage.toFixed(1)}%)</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${percentage}%"></div>
-                    </div>
-                `;
-                container.appendChild(gradeElement);
-            });
-
-            loading.style.display = 'none';
-            container.style.display = 'block';
-        }
-
-        // Load students data
-        async function loadStudentsData() {
-            try {
-                document.getElementById('students-loading').style.display = 'block';
-                document.getElementById('students-table-container').style.display = 'none';
-
-                const data = await apiCall('/admin/dashboard');
-                studentsData = data.students || [];
-
-                renderStudentsTable(studentsData);
-
-                document.getElementById('students-loading').style.display = 'none';
-                document.getElementById('students-table-container').style.display = 'block';
-            } catch (error) {
-                console.error('Failed to load students data:', error);
-            }
-        }
-
-        // Render students table
-        function renderStudentsTable(students) {
-            const tbody = document.getElementById('students-table-body');
-            tbody.innerHTML = '';
-
-            if (students.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #64748b;">No students found</td></tr>';
-                return;
-            }
-
-            students.forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <div style="font-weight: 500;">${student.name}</div>
-                    </td>
-                    <td>${student.email}</td>
-                    <td>
-                        <span class="badge badge-info">${student.submissionCount || 0}</span>
-                    </td>
-                    <td>
-                        <span class="badge ${getScoreBadgeClass(student.bestScore || 0)}">${student.bestScore || 0}</span>
-                    </td>
-                    <td>${formatDate(student.lastSubmission)}</td>
-                    <td>
-                        <button class="btn btn-secondary" onclick="viewStudentDetails('${student.email}')">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Load analytics data
-        async function loadAnalyticsData() {
-            console.log('Loading analytics data...');
-            
             try {
                 const response = await fetch('/api/admin/dashboard');
                 const data = await response.json();
                 
-                if (data.success) {
-                    const submissions = data.submissions || [];
-                    const students = data.students || [];
-                    
-                    // Calculate analytics
-                    const analytics = calculateAnalytics(submissions, students);
-                    
-                    // Update UI
-                    updateGradeDistribution(analytics.gradeDistribution);
-                    updateSubmissionTrends(analytics.submissionTrends);
-                    updateErrorAnalysis(analytics.errorAnalysis);
-                    updatePerformanceMetrics(analytics.performanceMetrics);
-                    updatePerformanceTable(analytics.performanceTable);
+                // Update stats
+                document.getElementById('stats-grid').innerHTML = `
+                    <div class="stat-card">
+                        <h3>Total Students</h3>
+                        <div class="value">${data.totalStudents}</div>
+                        <div class="change">Active students</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Submissions</h3>
+                        <div class="value">${data.totalSubmissions}</div>
+                        <div class="change">All time</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Average Score</h3>
+                        <div class="value">${data.averageScore.toFixed(1)}</div>
+                        <div class="change">Out of 100</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Success Rate</h3>
+                        <div class="value">${data.averageScore >= 70 ? 'High' : 'Medium'}</div>
+                        <div class="change">Performance</div>
+                    </div>
+                `;
+                
+                // Update recent submissions
+                displayRecentSubmissions(data.recentSubmissions);
+                
+                // Update settings
+                document.getElementById('total-submissions-count').value = data.totalSubmissions;
+                document.getElementById('total-students-count').value = data.totalStudents;
+                
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                document.getElementById('stats-grid').innerHTML = '<p>Error loading dashboard data</p>';
+            }
+        }
+
+        // Load submissions data
+        async function loadSubmissionsData() {
+            try {
+                const response = await fetch('/api/admin/dashboard');
+                const data = await response.json();
+                
+                displayAllSubmissions(data.recentSubmissions);
+                
+            } catch (error) {
+                console.error('Failed to load submissions data:', error);
+                document.getElementById('all-submissions').innerHTML = '<p>Error loading submissions data</p>';
+            }
+        }
+
+        // Display recent submissions
+        function displayRecentSubmissions(submissions) {
+            const container = document.getElementById('recent-submissions');
+            
+            if (submissions.length === 0) {
+                container.innerHTML = '<p style="padding: 2rem; text-align: center; color: #64748b;">No submissions yet</p>';
+                return;
+            }
+            
+            const table = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${submissions.map(sub => `
+                            <tr>
+                                <td>${sub.studentName}</td>
+                                <td>${sub.studentEmail}</td>
+                                <td>
+                                    <span class="score-badge ${getScoreClass(sub.grades.total)}">
+                                        ${sub.grades.total}/100
+                                    </span>
+                                </td>
+                                <td>${new Date(sub.timestamp).toLocaleDateString()}</td>
+                                <td>
+                                    <span class="score-badge ${sub.compilationSuccess ? 'score-excellent' : 'score-poor'}">
+                                        ${sub.compilationSuccess ? 'Compiled' : 'Failed'}
+                                    </span>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        // Display all submissions
+        function displayAllSubmissions(submissions) {
+            const container = document.getElementById('all-submissions');
+            
+            if (submissions.length === 0) {
+                container.innerHTML = '<p style="padding: 2rem; text-align: center; color: #64748b;">No submissions yet</p>';
+                return;
+            }
+            
+            const table = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th>Score</th>
+                            <th>TransactionHistory</th>
+                            <th>PortfolioManager</th>
+                            <th>Display</th>
+                            <th>Standards</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${submissions.map(sub => `
+                            <tr>
+                                <td>${sub.studentName}</td>
+                                <td>${sub.studentEmail}</td>
+                                <td>
+                                    <span class="score-badge ${getScoreClass(sub.grades.total)}">
+                                        ${sub.grades.total}/100
+                                    </span>
+                                </td>
+                                <td>${sub.grades.transactionHistory || 0}/25</td>
+                                <td>${sub.grades.portfolioManager || 0}/25</td>
+                                <td>${sub.grades.display || 0}/25</td>
+                                <td>${sub.grades.standards || 0}/25</td>
+                                <td>${new Date(sub.timestamp).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        // Get score class for styling
+        function getScoreClass(score) {
+            if (score >= 90) return 'score-excellent';
+            if (score >= 80) return 'score-good';
+            if (score >= 70) return 'score-fair';
+            return 'score-poor';
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/login';
                 }
             } catch (error) {
-                console.error('Error loading analytics:', error);
+                console.error('Logout failed:', error);
+                window.location.href = '/login';
             }
         }
-
-        // Calculate comprehensive analytics
-        function calculateAnalytics(submissions, students) {
-            const analytics = {
-                gradeDistribution: {},
-                submissionTrends: {},
-                errorAnalysis: {},
-                performanceMetrics: {},
-                performanceTable: []
-            };
-
-            // Grade Distribution
-            const gradeRanges = {
-                'A (90-100)': 0,
-                'B (80-89)': 0,
-                'C (70-79)': 0,
-                'D (60-69)': 0,
-                'F (0-59)': 0
-            };
-
-            // Error Analysis
-            const errorCounts = {
-                missingFields: 0,
-                compilationErrors: 0,
-                missingMethods: 0,
-                logicErrors: 0
-            };
-
-            // Performance Metrics
-            let totalScore = 0;
-            let passCount = 0;
-            let compilationSuccess = 0;
-            let executionSuccess = 0;
-            let totalSubmissions = submissions.length;
-
-            // Process each submission
-            submissions.forEach(submission => {
-                const score = submission.grades?.total || 0;
-                totalScore += score;
-                
-                if (score >= 70) passCount++;
-                if (submission.compilationSuccess) compilationSuccess++;
-                if (submission.executionSuccess) executionSuccess++;
-
-                // Grade distribution
-                if (score >= 90) gradeRanges['A (90-100)']++;
-                else if (score >= 80) gradeRanges['B (80-89)']++;
-                else if (score >= 70) gradeRanges['C (70-79)']++;
-                else if (score >= 60) gradeRanges['D (60-69)']++;
-                else gradeRanges['F (0-59)']++;
-
-                // Error analysis
-                if (submission.feedback) {
-                    submission.feedback.forEach(feedback => {
-                        if (feedback.includes('missing') && feedback.includes('field')) errorCounts.missingFields++;
-                        if (feedback.includes('Compilation failed')) errorCounts.compilationErrors++;
-                        if (feedback.includes('missing') && feedback.includes('method')) errorCounts.missingMethods++;
-                        if (feedback.includes('logic') || feedback.includes('validation')) errorCounts.logicErrors++;
-                    });
-                }
-            });
-
-            // Calculate averages
-            const avgScore = totalSubmissions > 0 ? Math.round(totalScore / totalSubmissions) : 0;
-            const passRate = totalSubmissions > 0 ? Math.round((passCount / totalSubmissions) * 100) : 0;
-            const compilationRate = totalSubmissions > 0 ? Math.round((compilationSuccess / totalSubmissions) * 100) : 0;
-            const executionRate = totalSubmissions > 0 ? Math.round((executionSuccess / totalSubmissions) * 100) : 0;
-
-            analytics.gradeDistribution = gradeRanges;
-            analytics.errorAnalysis = errorCounts;
-            analytics.performanceMetrics = {
-                avgScore,
-                passRate,
-                compilationRate,
-                executionRate
-            };
-
-            // Performance table
-            students.forEach(student => {
-                const studentSubmissions = submissions.filter(s => s.studentEmail === student.email);
-                const bestScore = Math.max(...studentSubmissions.map(s => s.grades?.total || 0));
-                const lastSubmission = studentSubmissions.length > 0 ? 
-                    new Date(studentSubmissions[studentSubmissions.length - 1].timestamp).toLocaleDateString() : 'N/A';
-                
-                const commonIssues = [];
-                if (studentSubmissions.length > 0) {
-                    const latestSubmission = studentSubmissions[studentSubmissions.length - 1];
-                    if (latestSubmission.feedback) {
-                        latestSubmission.feedback.slice(0, 3).forEach(feedback => {
-                            if (feedback.includes('❌')) {
-                                commonIssues.push(feedback.replace('❌', '').trim());
-                            }
-                        });
-                    }
-                }
-
-                analytics.performanceTable.push({
-                    name: student.name,
-                    email: student.email,
-                    attempts: studentSubmissions.length,
-                    bestScore,
-                    lastSubmission,
-                    status: bestScore >= 70 ? 'Pass' : 'Fail',
-                    commonIssues: commonIssues.slice(0, 2).join(', ') || 'None'
-                });
-            });
-
-            return analytics;
-        }
-
-        // Update grade distribution chart
-        function updateGradeDistribution(gradeDistribution) {
-            const ctx = document.getElementById('gradeChart');
-            if (!ctx) return;
-
-            // Simple bar chart using canvas
-            const canvas = ctx;
-            const ctx2d = canvas.getContext('2d');
-            const width = canvas.width;
-            const height = canvas.height;
-
-            ctx2d.clearRect(0, 0, width, height);
-
-            const grades = Object.keys(gradeDistribution);
-            const values = Object.values(gradeDistribution);
-            const maxValue = Math.max(...values);
-
-            const barWidth = width / grades.length * 0.8;
-            const barSpacing = width / grades.length * 0.2;
-
-            grades.forEach((grade, index) => {
-                const barHeight = (values[index] / maxValue) * (height - 40);
-                const x = index * (barWidth + barSpacing) + barSpacing / 2;
-                const y = height - barHeight - 20;
-
-                ctx2d.fillStyle = index < 2 ? '#10b981' : index < 4 ? '#f59e0b' : '#ef4444';
-                ctx2d.fillRect(x, y, barWidth, barHeight);
-
-                ctx2d.fillStyle = '#374151';
-                ctx2d.font = '12px Inter';
-                ctx2d.textAlign = 'center';
-                ctx2d.fillText(grade, x + barWidth / 2, height - 5);
-                ctx2d.fillText(values[index].toString(), x + barWidth / 2, y - 5);
-            });
-        }
-
-        // Update submission trends chart
-        function updateSubmissionTrends(trends) {
-            const ctx = document.getElementById('trendsChart');
-            if (!ctx) return;
-
-            // Simple line chart
-            const canvas = ctx;
-            const ctx2d = canvas.getContext('2d');
-            const width = canvas.width;
-            const height = canvas.height;
-
-            ctx2d.clearRect(0, 0, width, height);
-
-            // Draw a simple trend line
-            ctx2d.strokeStyle = '#3b82f6';
-            ctx2d.lineWidth = 2;
-            ctx2d.beginPath();
-            ctx2d.moveTo(20, height - 20);
-            ctx2d.lineTo(width - 20, 20);
-            ctx2d.stroke();
-
-            ctx2d.fillStyle = '#64748b';
-            ctx2d.font = '14px Inter';
-            ctx2d.textAlign = 'center';
-            ctx2d.fillText('Submission trends over time', width / 2, height / 2);
-        }
-
-        // Update error analysis
-        function updateErrorAnalysis(errorAnalysis) {
-            document.getElementById('missing-fields-count').textContent = errorAnalysis.missingFields || 0;
-            document.getElementById('compilation-errors-count').textContent = errorAnalysis.compilationErrors || 0;
-            document.getElementById('missing-methods-count').textContent = errorAnalysis.missingMethods || 0;
-            document.getElementById('logic-errors-count').textContent = errorAnalysis.logicErrors || 0;
-        }
-
-        // Update performance metrics
-        function updatePerformanceMetrics(metrics) {
-            document.getElementById('avg-score').textContent = metrics.avgScore || 0;
-            document.getElementById('pass-rate').textContent = (metrics.passRate || 0) + '%';
-            document.getElementById('compilation-rate').textContent = (metrics.compilationRate || 0) + '%';
-            document.getElementById('execution-rate').textContent = (metrics.executionRate || 0) + '%';
-        }
-
-        // Update performance table
-        function updatePerformanceTable(performanceTable) {
-            const tbody = document.getElementById('performance-table-body');
-            if (!tbody) return;
-
-            tbody.innerHTML = '';
-
-            performanceTable.forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${student.name}</td>
-                    <td>${student.email}</td>
-                    <td><span class="badge badge-info">${student.attempts}</span></td>
-                    <td><span class="badge ${student.bestScore >= 70 ? 'badge-success' : 'badge-danger'}">${student.bestScore}/100</span></td>
-                    <td>${student.lastSubmission}</td>
-                    <td><span class="badge ${student.status === 'Pass' ? 'badge-success' : 'badge-danger'}">${student.status}</span></td>
-                    <td class="text-sm">${student.commonIssues}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Utility functions
-        function getScoreBadgeClass(score) {
-            if (score >= 90) return 'badge-success';
-            if (score >= 80) return 'badge-info';
-            if (score >= 70) return 'badge-warning';
-            return 'badge-danger';
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return 'Never';
-            return new Date(dateString).toLocaleString();
-        }
-
-        // Modal functions
-        function viewStudentDetails(email) {
-            const student = studentsData.find(s => s.email === email);
-            if (!student) return;
-
-            const modal = document.getElementById('student-modal');
-            const content = document.getElementById('student-modal-content');
-            
-            content.innerHTML = `
-                <div style="margin-bottom: 1.5rem;">
-                    <h4 style="margin-bottom: 0.5rem;">${student.name}</h4>
-                    <p style="color: #64748b;">${student.email}</p>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                    <div>
-                        <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.25rem;">Total Submissions</div>
-                        <div style="font-size: 1.5rem; font-weight: 600;">${student.submissionCount || 0}</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.25rem;">Best Score</div>
-                        <div style="font-size: 1.5rem; font-weight: 600; color: #10b981;">${student.bestScore || 0}</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.25rem;">Last Submission</div>
-                        <div style="font-size: 1.5rem; font-weight: 600;">${formatDate(student.lastSubmission)}</div>
-                    </div>
-                </div>
-
-                <div>
-                    <h5 style="margin-bottom: 1rem;">Submission History</h5>
-                    <p style="color: #64748b;">No detailed submission history available yet.</p>
-                </div>
-            `;
-
-            modal.classList.add('show');
-        }
-
-        function closeModal() {
-            document.getElementById('student-modal').classList.remove('show');
-        }
-
-        // Action functions
-        function refreshData() {
-            switch (currentSection) {
-                case 'overview':
-                    loadDashboardData();
-                    break;
-                case 'students':
-                    loadStudentsData();
-                    break;
-                case 'analytics':
-                    loadAnalyticsData();
-                    break;
-            }
-        }
-
-        function exportData() {
-            console.log('Exporting data...');
-            // Export functionality here
-        }
-
-        // Search functionality
-        document.getElementById('student-search')?.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const filteredStudents = studentsData.filter(student => 
-                student.name.toLowerCase().includes(searchTerm) ||
-                student.email.toLowerCase().includes(searchTerm)
-            );
-            renderStudentsTable(filteredStudents);
-        });
-
-        // Sort functionality
-        document.getElementById('student-sort')?.addEventListener('change', function() {
-            const sortBy = this.value;
-            const sortedStudents = [...studentsData].sort((a, b) => {
-                if (sortBy === 'name') {
-                    return a.name.localeCompare(b.name);
-                }
-                return (b[sortBy] || 0) - (a[sortBy] || 0);
-            });
-            renderStudentsTable(sortedStudents);
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('student-modal')?.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
     </script>
 </body>
 </html>

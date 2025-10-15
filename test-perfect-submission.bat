@@ -1,59 +1,48 @@
 @echo off
 echo ========================================
-echo Java Portfolio Grader - Perfect Test
+echo Java Portfolio Grader - Test Script
 echo ========================================
-echo.
-echo This script will test the grading system with a perfect submission
-echo that should score 100/100 points.
 echo.
 
 echo Starting the Java Grader System...
-start "Java Grader" cmd /k "cd /d %~dp0 && npm start"
-
 echo.
+
+REM Start the server in background
+start /B npm start
+
 echo Waiting for server to start...
-timeout /t 5 /nobreak > nul
-
-echo.
-echo Opening the student interface...
-start http://localhost:5000
+timeout /t 3 /nobreak > nul
 
 echo.
 echo ========================================
-echo TEST INSTRUCTIONS:
+echo Server is now running!
 echo ========================================
-echo 1. The student interface should open in your browser
-echo 2. Use these test credentials:
-echo    - Full Name: Rikin Shah
-echo    - Email: rshah88@asu.edu
-echo 3. Upload the sample files:
-echo    - TransactionHistory.java (from sample folder)
-echo    - PortfolioManager.java (from sample folder)
-echo 4. Click "Submit for Grading"
-echo 5. You should see a score of 100/100!
+echo.
+echo Student Interface: http://localhost:5000
+echo Admin Login: http://localhost:5000/login
+echo Admin Dashboard: http://localhost:5000/admin
+echo.
+echo Default Admin Credentials:
+echo   Username: admin
+echo   Password: admin123
 echo.
 echo ========================================
-echo EXPECTED RESULTS:
+echo Test Instructions:
 echo ========================================
-echo - TransactionHistory Class: 25/25 points
-echo - PortfolioManager Class: 25/25 points  
-echo - Display Requirements: 25/25 points
-echo - Coding Standards: 25/25 points
-echo - TOTAL: 100/100 points
 echo.
-echo The sample files include:
-echo - All required private fields
-echo - Default and overloaded constructors
-echo - All getter and setter methods
-echo - toString method
-echo - ArrayList portfolioList
-echo - Complete menu system (0-6)
-echo - All transaction types (BUY/SELL/DEPOSIT/WITHDRAW)
-echo - Student name display
-echo - Proper formatting
-echo - Error handling with try-catch
-echo - Cash validation
-echo - Stock validation
-echo - Ticker capitalization
+echo 1. Go to: http://localhost:5000
+echo 2. Upload the sample Java files from the 'sample' folder
+echo 3. Check the grading results
+echo 4. Login to admin dashboard to view analytics
 echo.
-pause
+echo Sample files are located in: sample/
+echo   - TransactionHistory.java
+echo   - PortfolioManager.java
+echo.
+echo Press any key to stop the server...
+pause > nul
+
+REM Kill the server
+taskkill /f /im node.exe > nul 2>&1
+echo.
+echo Server stopped.
