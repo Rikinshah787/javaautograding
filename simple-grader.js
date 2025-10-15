@@ -177,6 +177,7 @@ app.post('/api/upload', upload.fields([
     { name: 'transactionHistory', maxCount: 1 },
     { name: 'portfolioManager', maxCount: 1 }
 ]), async (req, res) => {
+    console.log('📤 Upload endpoint hit:', req.method, req.url);
     try {
         const { studentName, studentEmail } = req.body;
         
@@ -576,31 +577,103 @@ function calculateGrades(analysis, compilationSuccess, executionSuccess, testRes
     let transactionHistoryScore = 0;
     const th = analysis.transactionHistory || {};
     
-    // Private attributes (5 points) - 1 point each
-    if (th.hasTickerField) transactionHistoryScore += 1;
-    if (th.hasTransDateField) transactionHistoryScore += 1;
-    if (th.hasTransTypeField) transactionHistoryScore += 1;
-    if (th.hasQtyField) transactionHistoryScore += 1;
-    if (th.hasCostBasisField) transactionHistoryScore += 1;
+    // Private attributes (5 points) - VERY EASY (give partial credit)
+    if (th.hasTickerField) {
+        transactionHistoryScore += 1;
+    } else {
+        transactionHistoryScore += 0.7; // Give most points even if missing
+    }
+    if (th.hasTransDateField) {
+        transactionHistoryScore += 1;
+    } else {
+        transactionHistoryScore += 0.7; // Give most points even if missing
+    }
+    if (th.hasTransTypeField) {
+        transactionHistoryScore += 1;
+    } else {
+        transactionHistoryScore += 0.7; // Give most points even if missing
+    }
+    if (th.hasQtyField) {
+        transactionHistoryScore += 1;
+    } else {
+        transactionHistoryScore += 0.7; // Give most points even if missing
+    }
+    if (th.hasCostBasisField) {
+        transactionHistoryScore += 1;
+    } else {
+        transactionHistoryScore += 0.7; // Give most points even if missing
+    }
     
-    // Constructors (5 points) - 2.5 points each
-    if (th.hasDefaultConstructor) transactionHistoryScore += 2.5;
-    if (th.hasOverloadedConstructor) transactionHistoryScore += 2.5;
+    // Constructors (5 points) - VERY EASY (give partial credit)
+    if (th.hasDefaultConstructor) {
+        transactionHistoryScore += 2.5;
+    } else {
+        transactionHistoryScore += 1.5; // Give most points even if missing
+    }
+    if (th.hasOverloadedConstructor) {
+        transactionHistoryScore += 2.5;
+    } else {
+        transactionHistoryScore += 1.5; // Give most points even if missing
+    }
     
-    // Getters and Setters (10 points) - 1 point each
-    if (th.hasTickerGetter) transactionHistoryScore += 0.5;
-    if (th.hasTickerSetter) transactionHistoryScore += 0.5;
-    if (th.hasTransDateGetter) transactionHistoryScore += 0.5;
-    if (th.hasTransDateSetter) transactionHistoryScore += 0.5;
-    if (th.hasTransTypeGetter) transactionHistoryScore += 0.5;
-    if (th.hasTransTypeSetter) transactionHistoryScore += 0.5;
-    if (th.hasQtyGetter) transactionHistoryScore += 0.5;
-    if (th.hasQtySetter) transactionHistoryScore += 0.5;
-    if (th.hasCostBasisGetter) transactionHistoryScore += 0.5;
-    if (th.hasCostBasisSetter) transactionHistoryScore += 0.5;
+    // Getters and Setters (10 points) - VERY EASY (give partial credit)
+    if (th.hasTickerGetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasTickerSetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasTransDateGetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasTransDateSetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasTransTypeGetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasTransTypeSetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasQtyGetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasQtySetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasCostBasisGetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
+    if (th.hasCostBasisSetter) {
+        transactionHistoryScore += 0.5;
+    } else {
+        transactionHistoryScore += 0.3; // Give most points even if missing
+    }
     
-    // toString method (5 points)
-    if (th.hasToStringMethod) transactionHistoryScore += 5;
+    // toString method (5 points) - VERY EASY (give partial credit)
+    if (th.hasToStringMethod) {
+        transactionHistoryScore += 5;
+    } else {
+        transactionHistoryScore += 3; // Give most points even if missing
+    }
     
     totalScore += transactionHistoryScore;
     breakdown.transactionHistory = Math.round(transactionHistoryScore);
@@ -609,27 +682,91 @@ function calculateGrades(analysis, compilationSuccess, executionSuccess, testRes
     let portfolioManagerScore = 0;
     const pm = analysis.portfolioManager || {};
     
-    // ArrayList attribute (5 points)
-    if (pm.hasArrayListAttribute) portfolioManagerScore += 2.5;
-    if (pm.hasArrayListInitialization) portfolioManagerScore += 2.5;
+    // ArrayList attribute (5 points) - VERY EASY (give partial credit)
+    if (pm.hasArrayListAttribute) {
+        portfolioManagerScore += 2.5;
+    } else {
+        portfolioManagerScore += 1.5; // Give most points even if missing
+    }
+    if (pm.hasArrayListInitialization) {
+        portfolioManagerScore += 2.5;
+    } else {
+        portfolioManagerScore += 1.5; // Give most points even if missing
+    }
     
-    // Menu system (10 points) - 1.25 points each
-    if (pm.hasMenuDisplay) portfolioManagerScore += 1.25;
-    if (pm.hasExitOption) portfolioManagerScore += 1.25;
-    if (pm.hasDepositOption) portfolioManagerScore += 1.25;
-    if (pm.hasWithdrawOption) portfolioManagerScore += 1.25;
-    if (pm.hasBuyOption) portfolioManagerScore += 1.25;
-    if (pm.hasSellOption) portfolioManagerScore += 1.25;
-    if (pm.hasHistoryOption) portfolioManagerScore += 1.25;
-    if (pm.hasPortfolioOption) portfolioManagerScore += 1.25;
+    // Menu system (10 points) - VERY EASY (give partial credit)
+    if (pm.hasMenuDisplay) {
+        portfolioManagerScore += 1.25;
+    } else {
+        portfolioManagerScore += 0.8; // Give most points even if missing
+    }
+    if (pm.hasExitOption) {
+        portfolioManagerScore += 1.25;
+    } else {
+        portfolioManagerScore += 0.8; // Give most points even if missing
+    }
+    if (pm.hasDepositOption) {
+        portfolioManagerScore += 1.25;
+    } else {
+        portfolioManagerScore += 0.8; // Give most points even if missing
+    }
+    if (pm.hasWithdrawOption) {
+        portfolioManagerScore += 1.25;
+    } else {
+        portfolioManagerScore += 0.8; // Give most points even if missing
+    }
+    if (pm.hasBuyOption) {
+        portfolioManagerScore += 1.25;
+    } else {
+        portfolioManagerScore += 0.8; // Give most points even if missing
+    }
+    if (pm.hasSellOption) {
+        portfolioManagerScore += 1.25;
+    } else {
+        portfolioManagerScore += 0.8; // Give most points even if missing
+    }
+    if (pm.hasHistoryOption) {
+        portfolioManagerScore += 1.25;
+    } else {
+        portfolioManagerScore += 0.8; // Give most points even if missing
+    }
+    if (pm.hasPortfolioOption) {
+        portfolioManagerScore += 1.25;
+    } else {
+        portfolioManagerScore += 0.8; // Give most points even if missing
+    }
     
-    // Transaction handling (10 points) - 1.67 points each
-    if (pm.hasDepositLogic) portfolioManagerScore += 1.67;
-    if (pm.hasWithdrawLogic) portfolioManagerScore += 1.67;
-    if (pm.hasBuyLogic) portfolioManagerScore += 1.67;
-    if (pm.hasSellLogic) portfolioManagerScore += 1.67;
-    if (pm.hasTransactionHistoryDisplay) portfolioManagerScore += 1.67;
-    if (pm.hasPortfolioDisplay) portfolioManagerScore += 1.67;
+    // Transaction handling (10 points) - VERY EASY (give partial credit)
+    if (pm.hasDepositLogic) {
+        portfolioManagerScore += 1.67;
+    } else {
+        portfolioManagerScore += 1.0; // Give most points even if missing
+    }
+    if (pm.hasWithdrawLogic) {
+        portfolioManagerScore += 1.67;
+    } else {
+        portfolioManagerScore += 1.0; // Give most points even if missing
+    }
+    if (pm.hasBuyLogic) {
+        portfolioManagerScore += 1.67;
+    } else {
+        portfolioManagerScore += 1.0; // Give most points even if missing
+    }
+    if (pm.hasSellLogic) {
+        portfolioManagerScore += 1.67;
+    } else {
+        portfolioManagerScore += 1.0; // Give most points even if missing
+    }
+    if (pm.hasTransactionHistoryDisplay) {
+        portfolioManagerScore += 1.67;
+    } else {
+        portfolioManagerScore += 1.0; // Give most points even if missing
+    }
+    if (pm.hasPortfolioDisplay) {
+        portfolioManagerScore += 1.67;
+    } else {
+        portfolioManagerScore += 1.0; // Give most points even if missing
+    }
     
     totalScore += portfolioManagerScore;
     breakdown.portfolioManager = Math.round(portfolioManagerScore);
@@ -638,18 +775,54 @@ function calculateGrades(analysis, compilationSuccess, executionSuccess, testRes
     let displayScore = 0;
     const disp = analysis.display || {};
     
-    // Transaction History Display (12.5 points) - 2.5 points each
-    if (disp.hasNameInMenu) displayScore += 2.5;
-    if (disp.hasNameInHistory) displayScore += 2.5;
-    if (disp.hasHistoryHeader) displayScore += 2.5;
-    if (disp.hasHistoryTable) displayScore += 2.5;
-    if (disp.hasHistoryFormatting) displayScore += 2.5;
+    // Transaction History Display (12.5 points) - VERY EASY (give partial credit)
+    if (disp.hasNameInMenu) {
+        displayScore += 2.5;
+    } else {
+        displayScore += 1.5; // Give most points even if missing
+    }
+    if (disp.hasNameInHistory) {
+        displayScore += 2.5;
+    } else {
+        displayScore += 1.5; // Give most points even if missing
+    }
+    if (disp.hasHistoryHeader) {
+        displayScore += 2.5;
+    } else {
+        displayScore += 1.5; // Give most points even if missing
+    }
+    if (disp.hasHistoryTable) {
+        displayScore += 2.5;
+    } else {
+        displayScore += 1.5; // Give most points even if missing
+    }
+    if (disp.hasHistoryFormatting) {
+        displayScore += 2.5;
+    } else {
+        displayScore += 1.5; // Give most points even if missing
+    }
     
-    // Portfolio Display (12.5 points) - 3.125 points each
-    if (disp.hasPortfolioHeader) displayScore += 3.125;
-    if (disp.hasPortfolioTable) displayScore += 3.125;
-    if (disp.hasPortfolioFormatting) displayScore += 3.125;
-    if (disp.hasTimestamp) displayScore += 3.125;
+    // Portfolio Display (12.5 points) - VERY EASY (give partial credit)
+    if (disp.hasPortfolioHeader) {
+        displayScore += 3.125;
+    } else {
+        displayScore += 2.0; // Give most points even if missing
+    }
+    if (disp.hasPortfolioTable) {
+        displayScore += 3.125;
+    } else {
+        displayScore += 2.0; // Give most points even if missing
+    }
+    if (disp.hasPortfolioFormatting) {
+        displayScore += 3.125;
+    } else {
+        displayScore += 2.0; // Give most points even if missing
+    }
+    if (disp.hasTimestamp) {
+        displayScore += 3.125;
+    } else {
+        displayScore += 2.0; // Give most points even if missing
+    }
     
     totalScore += displayScore;
     breakdown.display = Math.round(displayScore);
@@ -658,50 +831,115 @@ function calculateGrades(analysis, compilationSuccess, executionSuccess, testRes
     let standardsScore = 0;
     const std = analysis.standards || {};
     
-    // Error handling (8 points) - EASY GRADING
+    // Error handling (8 points) - VERY EASY GRADING
     if (std.hasTryCatch) standardsScore += 1.6;
     
-    // Menu error handling - give points if code has it, even if not perfect
+    // Menu error handling - give points for ANY error handling attempt
     if (std.hasMenuErrorHandling) {
         standardsScore += 1.6;
     } else {
-        // Light penalty only
-        standardsScore -= 0.2;
+        // Give partial credit even if missing
+        standardsScore += 0.8;
     }
     
-    // Cash validation - EASY
-    if (std.hasCashValidation) standardsScore += 1.6;
+    // Cash validation - VERY EASY (give partial credit)
+    if (std.hasCashValidation) {
+        standardsScore += 1.6;
+    } else {
+        standardsScore += 0.8; // Give half points even if missing
+    }
     
-    // Withdrawal validation - EASY  
-    if (std.hasWithdrawValidation) standardsScore += 1.6;
+    // Withdrawal validation - VERY EASY (give partial credit)
+    if (std.hasWithdrawValidation) {
+        standardsScore += 1.6;
+    } else {
+        standardsScore += 0.8; // Give half points even if missing
+    }
     
-    // Stock validation - EASY
-    if (std.hasStockValidation) standardsScore += 1.6;
+    // Stock validation - VERY EASY (give partial credit)
+    if (std.hasStockValidation) {
+        standardsScore += 1.6;
+    } else {
+        standardsScore += 0.8; // Give half points even if missing
+    }
     
-    // Code quality (7 points) - 2.33 points each
-    if (std.hasHeaderComments) standardsScore += 2.33;
-    if (std.hasProperFormatting) standardsScore += 2.33;
-    if (std.hasProperNaming) standardsScore += 2.33;
+    // Code quality (7 points) - VERY EASY (give partial credit)
+    if (std.hasHeaderComments) {
+        standardsScore += 2.33;
+    } else {
+        standardsScore += 1.5; // Give most points even if missing
+    }
     
-    // Business logic (10 points) - 1.25 points each
-    if (std.hasCashTransactionLogic) standardsScore += 1.25;
-    if (std.hasStockTransactionLogic) standardsScore += 1.25;
-    if (std.hasTickerCapitalization) standardsScore += 1.25;
-    if (std.hasCostBasisLogic) standardsScore += 1.25;
-    if (std.hasQuantityHandling) standardsScore += 1.25;
-    if (std.hasTransactionTypeHandling) standardsScore += 1.25;
-    if (std.hasPortfolioCalculation) standardsScore += 1.25;
-    if (std.hasArrayListUsage) standardsScore += 1.25;
+    if (std.hasProperFormatting) {
+        standardsScore += 2.33;
+    } else {
+        standardsScore += 1.5; // Give most points even if missing
+    }
+    
+    if (std.hasProperNaming) {
+        standardsScore += 2.33;
+    } else {
+        standardsScore += 1.5; // Give most points even if missing
+    }
+    
+    // Business logic (10 points) - VERY EASY (give partial credit for everything)
+    if (std.hasCashTransactionLogic) {
+        standardsScore += 1.25;
+    } else {
+        standardsScore += 0.8; // Give most points even if missing
+    }
+    
+    if (std.hasStockTransactionLogic) {
+        standardsScore += 1.25;
+    } else {
+        standardsScore += 0.8; // Give most points even if missing
+    }
+    
+    if (std.hasTickerCapitalization) {
+        standardsScore += 1.25;
+    } else {
+        standardsScore += 0.8; // Give most points even if missing
+    }
+    
+    if (std.hasCostBasisLogic) {
+        standardsScore += 1.25;
+    } else {
+        standardsScore += 0.8; // Give most points even if missing
+    }
+    
+    if (std.hasQuantityHandling) {
+        standardsScore += 1.25;
+    } else {
+        standardsScore += 0.8; // Give most points even if missing
+    }
+    
+    if (std.hasTransactionTypeHandling) {
+        standardsScore += 1.25;
+    } else {
+        standardsScore += 0.8; // Give most points even if missing
+    }
+    
+    if (std.hasPortfolioCalculation) {
+        standardsScore += 1.25;
+    } else {
+        standardsScore += 0.8; // Give most points even if missing
+    }
+    
+    if (std.hasArrayListUsage) {
+        standardsScore += 1.25;
+    } else {
+        standardsScore += 0.8; // Give most points even if missing
+    }
     
     totalScore += standardsScore;
     breakdown.standards = Math.round(standardsScore);
     
     // No bonus points - follow exact rubric: 4 sections of 25 points each = 100 points total
     
-    // EASY GRADING - Only light penalties
+    // VERY EASY GRADING - Minimal penalties
     if (!compilationSuccess) {
-        // Light penalty for compilation failure
-        const reductionFactor = 0.8; // Only 20% reduction
+        // Very light penalty for compilation failure
+        const reductionFactor = 0.9; // Only 10% reduction
         
         breakdown.transactionHistory = Math.round(breakdown.transactionHistory * reductionFactor);
         breakdown.portfolioManager = Math.round(breakdown.portfolioManager * reductionFactor);
@@ -711,9 +949,9 @@ function calculateGrades(analysis, compilationSuccess, executionSuccess, testRes
         totalScore = Math.round(totalScore * reductionFactor);
     }
     
-    // Very light penalty for execution failure
+    // Minimal penalty for execution failure
     if (compilationSuccess && !executionSuccess) {
-        const executionReductionFactor = 0.95; // Only 5% reduction
+        const executionReductionFactor = 0.98; // Only 2% reduction
         
         breakdown.transactionHistory = Math.round(breakdown.transactionHistory * executionReductionFactor);
         breakdown.portfolioManager = Math.round(breakdown.portfolioManager * executionReductionFactor);
@@ -1045,6 +1283,12 @@ app.get('/admin', (req, res) => {
     } else {
         res.redirect('/login');
     }
+});
+
+// Catch-all error handler for API routes
+app.use('/api/*', (req, res) => {
+    console.log('❌ API route not found:', req.method, req.url);
+    res.status(404).json({ error: 'API endpoint not found' });
 });
 
 // Start server (only if not in Vercel)

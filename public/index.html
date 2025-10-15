@@ -803,6 +803,9 @@
                     body: formData
                 });
                 
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
                 const result = await response.json();
                 
                 if (response.ok) {
