@@ -141,6 +141,13 @@ app.post('/api/auth/logout', (req, res) => {
 });
 
 app.get('/api/auth/status', (req, res) => {
+    console.log('🔐 Auth status check:', {
+        hasSession: !!req.session,
+        authenticated: !!(req.session && req.session.authenticated),
+        username: req.session ? req.session.username : null,
+        sessionId: req.session ? req.session.id : null
+    });
+    
     res.json({
         authenticated: !!(req.session && req.session.authenticated),
         user: req.session ? { username: req.session.username } : null
@@ -229,6 +236,8 @@ app.post('/api/upload', upload.fields([
 
 // Admin dashboard data
 app.get('/api/admin/dashboard', requireAuth, (req, res) => {
+    console.log('📊 Admin dashboard accessed by:', req.session.username);
+    
     const submissions = db.getSubmissions();
     const students = db.getStudents();
     

@@ -539,9 +539,11 @@
 
     <script>
         // Check authentication on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
-            loadDashboardData();
+        document.addEventListener('DOMContentLoaded', async function() {
+            const isAuthenticated = await checkAuth();
+            if (isAuthenticated) {
+                loadDashboardData();
+            }
         });
 
         // Navigation
@@ -580,72 +582,125 @@
         // Check authentication
         async function checkAuth() {
             try {
-                const response = await fetch('/api/auth/status');
+                const response = await fetch('/api/auth/status', {
+                    credentials: 'include' // Include cookies for session
+                });
+                
+                if (!response.ok) {
+                    console.log('Auth check failed: Response not OK', response.status);
+                    window.location.href = '/login';
+                    return false;
+                }
+                
                 const data = await response.json();
                 
                 if (!data.authenticated) {
+                    console.log('User not authenticated, redirecting to login');
                     window.location.href = '/login';
+                    return false;
                 }
+                
+                console.log('User authenticated successfully');
+                return true;
             } catch (error) {
                 console.error('Auth check failed:', error);
                 window.location.href = '/login';
+                return false;
             }
         }
 
         // Load dashboard data
         async function loadDashboardData() {
             try {
-                const response = await fetch('/api/admin/dashboard');
+                const response = await fetch('/api/admin/dashboard', {
+                    credentials: 'include' // Include cookies for session
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        console.log('Unauthorized, redirecting to login');
+                        window.location.href = '/login';
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                
+                // Check if data is valid
+                if (!data || typeof data.totalStudents === 'undefined') {
+                    throw new Error('Invalid data received from server');
+                }
                 
                 // Update stats
                 document.getElementById('stats-grid').innerHTML = `
                     <div class="stat-card">
                         <h3>Total Students</h3>
-                        <div class="value">${data.totalStudents}</div>
+                        <div class="value">${data.totalStudents || 0}</div>
                         <div class="change">Active students</div>
                     </div>
                     <div class="stat-card">
                         <h3>Total Submissions</h3>
-                        <div class="value">${data.totalSubmissions}</div>
+                        <div class="value">${data.totalSubmissions || 0}</div>
                         <div class="change">All time</div>
                     </div>
                     <div class="stat-card">
                         <h3>Average Score</h3>
-                        <div class="value">${data.averageScore.toFixed(1)}</div>
+                        <div class="value">${(data.averageScore || 0).toFixed(1)}</div>
                         <div class="change">Out of 100</div>
                     </div>
                     <div class="stat-card">
                         <h3>Success Rate</h3>
-                        <div class="value">${data.averageScore >= 70 ? 'High' : 'Medium'}</div>
+                        <div class="value">${(data.averageScore || 0) >= 70 ? 'High' : 'Medium'}</div>
                         <div class="change">Performance</div>
                     </div>
                 `;
                 
                 // Update recent submissions
-                displayRecentSubmissions(data.recentSubmissions);
+                displayRecentSubmissions(data.recentSubmissions || []);
                 
                 // Update settings
-                document.getElementById('total-submissions-count').value = data.totalSubmissions;
-                document.getElementById('total-students-count').value = data.totalStudents;
+                document.getElementById('total-submissions-count').value = data.totalSubmissions || 0;
+                document.getElementById('total-students-count').value = data.totalStudents || 0;
                 
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
-                document.getElementById('stats-grid').innerHTML = '<p>Error loading dashboard data</p>';
+                document.getElementById('stats-grid').innerHTML = `
+                    <div class="stat-card" style="grid-column: 1 / -1; text-align: center; color: #ef4444;">
+                        <h3>Error Loading Dashboard</h3>
+                        <div class="value">${error.message}</div>
+                        <div class="change">Please refresh the page or check your connection</div>
+                    </div>
+                `;
             }
         }
 
         // Load submissions data
         async function loadSubmissionsData() {
             try {
-                const response = await fetch('/api/admin/dashboard');
-                const data = await response.json();
+                const response = await fetch('/api/admin/dashboard', {
+                    credentials: 'include' // Include cookies for session
+                });
                 
-                displayAllSubmissions(data.recentSubmissions);
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        window.location.href = '/login';
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayAllSubmissions(data.recentSubmissions || []);
                 
             } catch (error) {
                 console.error('Failed to load submissions data:', error);
-                document.getElementById('all-submissions').innerHTML = '<p>Error loading submissions data</p>';
+                document.getElementById('all-submissions').innerHTML = `
+                    <div style="padding: 2rem; text-align: center; color: #ef4444;">
+                        <h4>Error Loading Submissions</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
             }
         }
 
